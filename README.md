@@ -919,7 +919,7 @@ bash build.sh
 
 ## License
 
-[MIT](LICENSE) — © 2024 PromptSync
+[MIT](LICENSE) — © 2026 PromptSync
 
 ---
 
