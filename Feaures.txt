@@ -1,0 +1,327 @@
+PROMPTSYNC PRO v3.0.0 — FEATURE REFERENCE
+================================================================================
+
+Complete breakdown of all 16 features.
+
+
+================================================================================
+F1 — MULTI-PROFILE SYSTEM
+================================================================================
+
+Store and manage multiple profiles for different roles and contexts.
+
+Built-in profiles: Default, Student, Developer.
+Custom profiles: create unlimited additional profiles.
+
+Each profile stores:
+  Name            Your name or handle
+  Role            Your job, study role, or identity
+  Goals           What you are trying to accomplish
+  Skills          Technologies or subjects you have experience with
+  Preferences     How you like responses formatted or styled
+  Custom Notes    Freeform profile-level context
+
+Switching profiles from the popup dropdown instantly changes all injected
+context. Profiles are fully independent of each other.
+
+
+================================================================================
+F2 — PROFILE AUTO-SWITCH PER WEBSITE
+================================================================================
+
+Automatically switch to the right profile when visiting a domain.
+
+Configuration: Settings > Auto-Switch > add domain-to-profile mappings.
+
+Example:
+  claude.ai          Student profile
+  chatgpt.com        Developer profile
+  gemini.google.com  Default profile
+
+Detection happens on page load. Mapping is manual only — no AI detection.
+The feature can be toggled on or off without losing your saved mappings.
+
+
+================================================================================
+F3 — SMART CONTEXT INJECTION
+================================================================================
+
+Builds a context block using a fully customizable template before every message.
+
+Available placeholders:
+  {user_name}      Your name from the active profile
+  {user_role}      Your role from the active profile
+  {user_goals}     Your goals from the active profile
+  {memories}       Smart-selected saved notes
+  {instruction}    Active task mode or response control instruction
+
+Each placeholder section can be individually toggled on or off in Settings.
+
+Default format:
+  [USER CONTEXT START]
+  Name: {user_name}
+  Role: {user_role}
+  Goals: {user_goals}
+  Memory: {memories}
+  Instruction: {instruction}
+  [USER CONTEXT END]
+
+The full template text is editable in Settings > Template.
+
+
+================================================================================
+F4 — TOKEN-SAVING DEFAULT SYSTEM
+================================================================================
+
+When no task mode is active, appends a short-answer instruction to every
+injection by default:
+
+  "Answer as short as possible. No explanation unless asked."
+
+Additional behavior:
+  Facts               Direct answer only, no background
+  Best-choice queries Single best option, no alternatives list
+
+This instruction is automatically suppressed when a task mode is active.
+Override per-message with /explain or /detail.
+Toggle or edit in Settings > Response Control.
+
+
+================================================================================
+F5 — COMMAND SYSTEM (12 BUILT-IN + CUSTOM)
+================================================================================
+
+Slash commands typed anywhere in your message modify injection for that one
+message only. Commands are stripped before sending — the AI never sees them.
+
+Built-in commands:
+  /no-memory        Skip injection entirely for this message
+  /only-profile     Inject profile only, no saved notes
+  /strict           Minimal: name and pinned notes only
+  /explain          Allow full explanation (disables short-answer mode)
+  /detail           Full context plus request for a detailed response
+  /code             Activate coding mode for this message
+  /short            Force the shortest possible answer
+  /mode <n>      Activate a named task mode for this message
+  /reset            Revert to default injection behavior
+  /temp <text>      Add session-only memory (not saved permanently)
+
+Commands are parsed with regex and do not cause state issues between messages.
+
+
+================================================================================
+F6 — CUSTOM COMMANDS
+================================================================================
+
+Create your own slash commands with custom behaviors.
+
+Setup (Modes Tab > Custom Commands):
+  1. Set the command name (e.g. /fast, /deep).
+  2. Configure one or more actions:
+       - Switch to a task mode
+       - Enable or disable memory injection
+       - Skip the system prompt
+       - Inject a custom instruction string
+
+No arbitrary code execution. All actions use a predefined safe action set.
+Custom commands can be created, edited, and deleted at any time.
+
+
+================================================================================
+F7 — TASK MODES (3 BUILT-IN + CUSTOM)
+================================================================================
+
+Task modes replace the default short-answer instruction with a specialized one.
+
+Built-in modes:
+  Coding   "Give clean, minimal, working code. No explanation unless asked."
+  Study    "Explain simply step by step. Use easy words. Give examples."
+  Short    "Answer in the shortest possible way."
+
+Custom modes:
+  Create any mode with a name and your own instruction text.
+
+Activation:
+  Globally    Use the mode dropdown in the popup or floating panel
+  Per message Use /mode <n> in your message
+  Deactivate  Use /reset for a single message
+
+When a task mode is active, the token-saving default is automatically
+suppressed.
+
+
+================================================================================
+F8 — SAVED CONTEXT NOTES
+================================================================================
+
+A full note management system for persistent context.
+
+Note properties:
+  Text        The context content to inject
+  Tags        Categorical labels for filtering and search
+  Priority    High / Medium / Low — affects injection scoring order
+  Pin         Always inject regardless of relevance score
+  Enabled     Toggle on/off without deleting
+  Source      Tracks if added manually, via text selection, context menu,
+              or auto-detect
+
+Note management:
+  Search       Filter by text content or tag
+  Drag/drop    Reorder notes manually
+  Bulk delete  Select multiple and delete at once
+
+Smart Keyword Matching:
+  PromptSync extracts keywords from your current message (stop words filtered),
+  then scores each note by keyword overlap plus priority and pin bonuses.
+  The most relevant notes are automatically selected up to the configured
+  maximum. This ensures only contextually relevant notes are injected.
+
+
+================================================================================
+F9 — MEMORY DECAY
+================================================================================
+
+Prevents context bloat by automatically flagging notes you no longer use.
+
+How it works:
+  Every note tracks a lastUsed timestamp, updated each time the note is
+  injected into a message. After a configurable number of days without use
+  (default: 7 days), the note is flagged as stale.
+
+  A decay banner appears in the Saved tab listing all stale notes.
+  Clicking "Remove All Stale" deletes them in one action.
+
+  Pinned notes are exempt from decay and are never flagged.
+
+Configuration: Settings > Decay > enable toggle and set the day threshold.
+
+
+================================================================================
+F10 — SECURITY GUARD
+================================================================================
+
+Scans note text for sensitive data before saving.
+
+Detected patterns and examples:
+  OpenAI API keys      sk-...
+  Stripe keys          pk_live_..., sk_live_...
+  AWS access keys      AKIA...
+  GitHub tokens        ghp_...
+  Private keys         -----BEGIN PRIVATE KEY-----
+  Bearer tokens        Bearer ...
+  Password patterns    password:, passwd=, secret:
+  Credit card numbers  13 to 19 digit sequences, validated with Luhn checksum
+
+When a pattern is detected, a warning popup appears. The user can choose to
+override and save anyway, or cancel the save.
+
+Toggle: Settings > Security > Detect Sensitive Data.
+
+
+================================================================================
+F11 — CUSTOMIZABLE INJECTION TEMPLATE
+================================================================================
+
+Edit the exact format of the context block prepended to every message.
+
+  - Full text editor for the template format
+  - Use any combination of placeholders:
+      {user_name}, {user_role}, {user_goals}, {memories}, {instruction}
+  - Toggle each section on or off independently without editing the template
+  - Changes apply immediately to all future injections
+
+Located in: Settings > Template.
+
+
+================================================================================
+F12 — RESPONSE CONTROL
+================================================================================
+
+A global instruction appended to every injection, separate from task modes.
+
+Default instruction:
+  "Keep answer short. No extra explanation. Only give what is asked."
+
+This is fully editable. Set any instruction text you want.
+Toggle on or off globally in Settings.
+The instruction is automatically overridden when a task mode is active.
+
+
+================================================================================
+F13 — FLOATING PANEL (TOKEN BADGE + CONTROL PANEL)
+================================================================================
+
+A persistent overlay on all supported AI pages.
+
+Token Badge:
+  Always visible on AI pages. Shows current injection token count (e.g. 120 tok).
+  Click the badge to expand the full control panel.
+
+Full Panel:
+  Memory toggle       Enable or disable context injection instantly
+  Mode switcher       Change task mode without opening the popup
+  Token breakdown     See input, memory, and session token counts separately
+  Context window bar  Color-coded progress bar showing percentage of the
+                      platform's context limit used (green > yellow > red)
+  Session reset       Clears /temp memories added during the current session
+
+Panel behavior:
+  Draggable — position is saved across browser sessions.
+  Click outside to collapse.
+  Visibility setting: badge only, full panel, or hidden — in Settings.
+
+
+================================================================================
+F14 — REAL-TIME TOKEN TRACKING
+================================================================================
+
+Accurate token counting using the o200k_base BPE tokenizer, the same tokenizer
+used by GPT-4o.
+
+Tracked values:
+  Input tokens    Your typed message before injection
+  Memory tokens   The injected context block
+  Session total   Cumulative total across all messages this session
+
+Context window limits by platform:
+  ChatGPT       128,000 tokens
+  Claude        200,000 tokens
+  Gemini      1,000,000 tokens
+  Perplexity     16,000 tokens
+  DeepSeek       64,000 tokens
+
+Performance:
+  Token calculation debounced at 300ms.
+  BPE tokenizer results cached with 200-entry LRU for repeated strings.
+
+
+================================================================================
+F15 — DARK MODE / THEME
+================================================================================
+
+Three theme options:
+  Light    Always light theme
+  Dark     Always dark theme
+  System   Follows the operating system preference automatically
+
+Cycle themes with the theme button in the popup header.
+All styles use CSS variables for smooth, instant switching.
+The floating panel and toast notifications use glassmorphism effects in
+dark mode.
+
+
+================================================================================
+F16 — ONBOARDING
+================================================================================
+
+A guided first-run experience for new users.
+
+  - 3-step visual overlay explains the core workflow on first install
+  - Shown once per extension version (version tracked in settings)
+  - Dismissible with "Got it" or "Skip" buttons, smooth fade-out animation
+  - Can be re-triggered at any time from Help Tab > Reset Onboarding
+
+
+================================================================================
+PromptSync PRO v3.0.0 — 16 features. Zero cloud. Total control.
+================================================================================
