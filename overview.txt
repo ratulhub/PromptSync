@@ -1,0 +1,329 @@
+================================================================================
+                         PromptSync PRO v3.0.0
+                     COMPLETE TECHNICAL OVERVIEW
+================================================================================
+
+  "Your context. Synced with AI."
+  "Less typing, smarter AI, better results."
+
+  PromptSync is a privacy-first Chrome Extension (Manifest V3) that
+  automatically injects your personal context into AI chats. It remembers
+  your goals, preferences, and important notes, then silently prepends
+  them to every message — so you never repeat yourself and always get
+  better, more relevant responses.
+
+  Works on: ChatGPT · Claude · Gemini · Perplexity · DeepSeek
+
+================================================================================
+  1. CORE CONCEPT
+================================================================================
+
+  PROBLEM:  Every new AI chat starts from zero. You type "I'm a developer,
+            I use React, keep answers short" hundreds of times.
+
+  SOLUTION: PromptSync stores your profile and context notes locally, then
+            auto-injects them into the input field before your message sends.
+            The AI sees your context + your question as a single prompt.
+
+  PIPELINE: User Input → Parse Commands → Build Context → Inject → Track Tokens
+
+  PRIVACY:  All data stays in chrome.storage.local. Zero network requests.
+            No analytics. No telemetry. Nothing leaves your device. Ever.
+
+================================================================================
+  2. FEATURE BREAKDOWN (16 FEATURES)
+================================================================================
+
+  [F1] MULTI-PROFILE SYSTEM
+       Store multiple profiles (Default, Student, Developer, Custom).
+       Each profile has: name, role, goals, skills, preferences, notes.
+       Switch profiles from popup or let auto-switch handle it.
+
+  [F2] PROFILE AUTO-SWITCH PER WEBSITE
+       Map domains to profiles: claude.ai → Student, chatgpt.com → Developer.
+       On page load, detect domain and auto-switch profile.
+       Manual mapping only (no AI detection). Toggle on/off.
+
+  [F3] SMART CONTEXT INJECTION
+       Builds injection using customizable template with placeholders:
+       {user_name}, {user_role}, {user_goals}, {memories}, {instruction}
+       Section toggles: enable/disable name, role, goals, memory, instruction.
+       Wraps in [USER CONTEXT START]...[USER CONTEXT END] markers.
+
+  [F4] TOKEN-SAVING DEFAULT SYSTEM
+       Injects: "Answer as short as possible. No explanation unless asked."
+       Facts → direct answer. Best choice → only best option.
+       Disabled automatically when task mode is active.
+       Per-message override with /explain or /detail commands.
+
+  [F5] COMMAND SYSTEM (12 BUILT-IN + CUSTOM)
+       /no-memory     — skip injection for this message
+       /only-profile  — inject only profile (no saved notes)
+       /strict        — ultra-minimal (name + pinned only)
+       /explain       — allow full explanation
+       /detail        — full context + detailed answer
+       /code          — coding assistant mode
+       /short         — force shortest answer
+       /mode <name>   — switch task mode (coding/study/short/custom)
+       /reset         — revert to default
+       /temp <text>   — add session-only memory
+       + User-defined custom commands
+
+  [F6] CUSTOM COMMANDS
+       Users create commands like /fast, /deep.
+       Each triggers predefined actions:
+       - Mode change (coding/study/short/custom)
+       - Enable/disable memory
+       - Inject custom instruction text
+       No arbitrary code execution. Only preset actions.
+       Create/edit/delete from Modes tab.
+
+  [F7] TASK MODES (3 BUILT-IN + CUSTOM)
+       Coding: "Give clean, minimal, working code. No explanation unless asked."
+       Study:  "Explain simply step by step. Use easy words. Give examples."
+       Short:  "Answer in the shortest possible way."
+       Custom: User-defined modes with custom instruction text.
+       Set active mode globally or per-message with /mode command.
+
+  [F8] SAVED CONTEXT NOTES
+       Add/edit/delete notes with text, tags, priority, pin status.
+       Enable/disable individual notes.
+       Drag-and-drop reorder. Bulk delete.
+       Smart keyword matching: notes relevant to your question auto-selected.
+       Priority scoring: high > medium > low. Pinned always included.
+
+  [F9] MEMORY DECAY
+       Tracks lastUsed timestamp on every note.
+       After configurable days (default: 7), suggests unused notes for removal.
+       Decay banner in Saved tab with one-click bulk remove.
+       Pinned notes are exempt from decay.
+
+  [F10] SECURITY GUARD
+       Scans text for sensitive patterns before saving:
+       - API keys: OpenAI (sk-), Stripe (pk_/sk_), AWS (AKIA), GitHub (ghp_)
+       - Passwords: password:, passwd=, secret: patterns
+       - Credit cards: 13-19 digit Luhn-validated numbers
+       - Private keys: -----BEGIN PRIVATE KEY-----
+       - Bearer tokens
+       Shows warning popup. User can override or cancel save.
+
+  [F11] CUSTOMIZABLE INJECTION TEMPLATE
+       Edit the exact format of injected context.
+       Placeholders: {user_name}, {user_role}, {user_goals}, {memories}, {instruction}
+       Section toggles: individually enable/disable each section.
+       Default wraps in [USER CONTEXT START]...[USER CONTEXT END].
+
+  [F12] RESPONSE CONTROL
+       Editable instruction appended to every injection.
+       Default: "Keep answer short. No extra explanation. Only give what is asked."
+       Users can customize to any instruction they want.
+       Toggle on/off globally.
+
+  [F13] FLOATING PANEL (TOKEN BADGE + CONTROL PANEL)
+       Badge: always visible on AI pages, shows "120 tok" count.
+       Click to expand into floating panel:
+       - Memory toggle ON/OFF
+       - Mode switcher dropdown
+       - Token breakdown: input, memory, session
+       - Context window progress bar with color coding
+       - Session reset button
+       Draggable (saves position). Outside click to collapse.
+       Settings: show badge only, show panel, hide completely.
+
+  [F14] REAL-TIME TOKEN TRACKING
+       Uses o200k_base BPE tokenizer for accurate counting.
+       Tracks: input tokens, injected memory tokens, session total.
+       Shows percentage of context window used per platform:
+       ChatGPT: 128K, Claude: 200K, Gemini: 1M, Perplexity: 16K, DeepSeek: 64K.
+
+  [F15] DARK MODE / THEME
+       Light, Dark, System (auto-detect OS preference).
+       Cycle with header button. CSS variables for smooth switching.
+       Glassmorphism effects on floating panel and toasts.
+
+  [F16] ONBOARDING
+       First-run overlay with 3-step visual guide.
+       Only shows once per version (tracks version in settings).
+       "Got it" and "Skip" buttons with smooth fade-out.
+
+================================================================================
+  3. ARCHITECTURE
+================================================================================
+
+  manifest.json (Manifest V3)
+  ├── background/background.js    — Service worker
+  │   ├── Context menu ("Save to PromptSync")
+  │   ├── Keyboard shortcut (Ctrl+Shift+M)
+  │   ├── Default settings, profiles, modes on first install
+  │   ├── Content script re-injection on update
+  │   └── Memory decay alarm (daily)
+  │
+  ├── storage/storage.js          — Central data layer
+  │   ├── Multi-profile CRUD (create/read/update/delete/switch)
+  │   ├── Memory items CRUD with migration
+  │   ├── Task modes CRUD
+  │   ├── Custom commands CRUD
+  │   ├── Settings with deep-merge defaults
+  │   ├── Injection template management
+  │   ├── Domain → profile auto-switch lookup
+  │   ├── Export/import (all data, all formats)
+  │   └── Settings cache with TTL for performance
+  │
+  ├── utils/
+  │   ├── tokenizer.js            — BPE token counter (o200k_base + heuristic fallback)
+  │   ├── contextEngine.js        — Smart context selection + template engine
+  │   │   ├── Keyword extraction (stop word filtered)
+  │   │   ├── Relevance scoring (keyword match + priority + pin bonus)
+  │   │   ├── Template-based build with placeholder replacement
+  │   │   ├── Task mode instruction injection
+  │   │   ├── Response control injection
+  │   │   ├── Session memory management
+  │   │   └── lastUsed timestamp tracking
+  │   ├── commandParser.js        — Slash command parser
+  │   │   ├── 10 built-in commands
+  │   │   ├── Dynamic custom command loading from storage
+  │   │   ├── Regex-based extraction without state issues
+  │   │   └── Human-readable command list generator
+  │   └── securityGuard.js        — Sensitive data scanner
+  │       ├── 10 detection patterns (API keys, passwords, CC, etc.)
+  │       ├── Luhn checksum for credit card validation
+  │       └── Quick-check fast path
+  │
+  ├── content/
+  │   ├── content.js              — Core injection pipeline
+  │   │   ├── Platform detection (5 platforms)
+  │   │   ├── Input field discovery (multi-selector per platform)
+  │   │   ├── Send button interception (click + Enter)
+  │   │   ├── Injection pipeline (parse → build → inject → track)
+  │   │   ├── Auto-detect user info patterns
+  │   │   ├── Text selection save button
+  │   │   ├── SPA navigation detection
+  │   │   ├── Profile auto-switch per domain
+  │   │   ├── Security scanning on save
+  │   │   └── Debug mode logging
+  │   ├── content.css             — All injected UI styles
+  │   ├── floatingPanel.js        — Combined token badge + control panel
+  │   └── onboarding.js           — First-run overlay
+  │
+  ├── popup/
+  │   ├── popup.html              — 5-tab dashboard
+  │   │   ├── Profile tab (switcher, form, preview, token bar)
+  │   │   ├── Saved tab (search, tags, priority, bulk ops, decay)
+  │   │   ├── Modes tab (task modes + custom commands)
+  │   │   ├── Settings tab (template, response, security, decay, auto-switch, platforms, advanced)
+  │   │   └── Help tab (commands, tips, onboarding reset)
+  │   ├── popup.js                — All popup logic
+  │   └── popup.css               — CSS variables, light/dark, all components
+  │
+  └── vendor/o200k_base.js        — GPT tokenizer library
+
+================================================================================
+  4. STORAGE SCHEMA
+================================================================================
+
+  asm_profiles: {
+    default:   { name, role, goals, skills, preferences, customNotes },
+    student:   { ... },
+    developer: { ... },
+    custom_1:  { ... }
+  }
+
+  asm_items: [
+    {
+      id:        string (base36 + random),
+      text:      string,
+      keywords:  string[],
+      priority:  "high" | "medium" | "low",
+      lastUsed:  timestamp,
+      pinned:    boolean,
+      enabled:   boolean,
+      source:    "manual" | "selection" | "context-menu" | "auto-detect",
+      timestamp: number,
+      tags:      string[]
+    }
+  ]
+
+  asm_settings: {
+    injectEnabled, compactMode, autoDetect, saveSelection,
+    showTokenCount, tokenSavingPrompt, focusMode, tokenIndicator,
+    injectionMode, darkMode, activeProfile, activeMode,
+    platforms: { chatgpt, claude, gemini, perplexity, deepseek },
+    responseControl: { enabled, text, perMessage },
+    security: { detectSensitive },
+    decay: { enabled, days },
+    advanced: { injectionDelay, maxMemories, strictMode, debugMode, maxTokenLimit },
+    autoSwitch: { enabled, mappings: { domain → profileName } },
+    onboarding: { completed, version },
+    floatingPanel: { mode, visible }
+  }
+
+  asm_task_modes: {
+    coding: { name, instruction, builtin },
+    study:  { name, instruction, builtin },
+    short:  { name, instruction, builtin },
+    custom: { name, instruction, builtin: false }
+  }
+
+  asm_custom_commands: [
+    {
+      name:        "/fast",
+      description: "Quick short answer",
+      enabled:     true,
+      actions: {
+        taskMode:       "short",
+        disableMemory:  true,
+        skipSystemPrompt: false,
+        instruction:    "Be extremely brief."
+      }
+    }
+  ]
+
+  asm_template: {
+    format:   "[USER CONTEXT START]\nName: {user_name}\n...",
+    sections: { name, role, goals, memory, instruction }
+  }
+
+================================================================================
+  5. SECURITY MODEL
+================================================================================
+
+  - ALL data in chrome.storage.local (never leaves device)
+  - NO external API calls, analytics, or telemetry
+  - HTML-escaped output in all display contexts (XSS prevention)
+  - SecurityGuard scans before every save operation
+  - Custom commands limited to predefined actions only (no eval/exec)
+  - Input sanitization on import (length limits, type validation)
+  - Content script namespace isolation (asm- prefix on all DOM elements)
+
+================================================================================
+  6. PERFORMANCE
+================================================================================
+
+  - Settings cache with 2-second TTL (avoids repeated chrome.storage reads)
+  - Token calculation debounced at 300ms
+  - Auto-detect pattern matching debounced at 1500ms
+  - BPE tokenizer result cache (200 entries LRU)
+  - MutationObserver for DOM changes (no polling for input discovery)
+  - setInterval polling only for SPA URL changes (800ms) and safety checks
+  - Lazy loading: floating panel initializes only when setting enabled
+
+================================================================================
+  7. PLATFORM SUPPORT
+================================================================================
+
+  Each platform has custom selectors for:
+  - Input field (textarea, contenteditable, ProseMirror)
+  - Send button (various aria-labels, form submits, icon buttons)
+
+  ChatGPT:    ProseMirror + data-testid send button
+  Claude:     ProseMirror + aria-label Send Message
+  Gemini:     rich-textarea contenteditable + send-button class
+  Perplexity: textarea + Submit aria-label
+  DeepSeek:   textarea#chat-input + div role=button
+
+  SPA navigation handled via URL polling + popstate listener.
+  Content scripts re-injected on extension update.
+
+================================================================================
+  PromptSync PRO v3.0.0 — Stop repeating. Start syncing.
+================================================================================

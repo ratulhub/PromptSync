@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Smart Memory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__brand">
+      <div class="header__logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <rect x="3" y="3" width="8" height="8" rx="2.5" fill="url(#logo-grad)" opacity="1"/>
+          <rect x="13" y="3" width="8" height="8" rx="2.5" fill="url(#logo-grad)" opacity="0.6"/>
+          <rect x="3" y="13" width="8" height="8" rx="2.5" fill="url(#logo-grad)" opacity="0.6"/>
+          <rect x="13" y="13" width="8" height="8" rx="2.5" fill="url(#logo-grad)" opacity="0.3"/>
+        </svg>
+      </div>
+      <span class="header__title">AI Smart Memory</span>
+      <span class="header__version">PRO</span>
+    </div>
+    <div class="header__controls">
+      <button class="header__theme-btn" id="js-theme-toggle" title="Toggle dark mode">
+        <svg class="theme-icon theme-icon--light" viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+          <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+        </svg>
+        <svg class="theme-icon theme-icon--dark" viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+        </svg>
+      </button>
+      <div class="header__badge" id="js-status-badge" title="Memory injection status">
+        <span class="badge__dot"></span>
+        <span class="badge__label">Active</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab tab--active" data-tab="profile">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 8a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm0 1.5c-3.315 0-6 1.79-6 4V15h12v-1.5c0-2.21-2.685-4-6-4z"/></svg>
+      Profile
+    </button>
+    <button class="tab" data-tab="saved">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M3 1.5A1.5 1.5 0 014.5 0h7A1.5 1.5 0 0113 1.5V14l-5-3-5 3V1.5z"/></svg>
+      Saved
+    </button>
+    <button class="tab" data-tab="settings">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.342 1.367a1 1 0 001.118.708l1.386-.322c.95-.22 1.534.9.836 1.604l-.914 1.09a1 1 0 00.073 1.32l.99 1.065c.676.727.138 1.89-.78 1.667l-1.382-.294a1 1 0 00-1.09.751L9.093 9.8c-.263.963-1.638.97-1.91.01L6.81 8.444a1 1 0 00-1.076-.762l-1.386.282c-.923.188-1.481-.952-.795-1.668L4.56 5.22a1 1 0 00.057-1.323L3.696 2.82c-.685-.71-.08-1.834.88-1.6l1.38.336a1 1 0 001.113-.728V.727zM8 5.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>
+      Settings
+    </button>
+    <button class="tab" data-tab="help">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm.93 12.588H7.07V11.1h1.86v1.488zM10.3 7.6c-.3.32-.8.71-1.16 1.04-.24.22-.34.48-.34.85v.24H7.14v-.46c0-.57.2-1.03.55-1.38.36-.36.82-.71 1.14-1.01.34-.32.51-.68.51-1.06 0-.63-.46-1.08-1.26-1.08-.7 0-1.26.4-1.41 1.11l-1.62-.37C5.31 4.38 6.41 3.42 8.05 3.42c1.81 0 2.95 1.06 2.95 2.58 0 .72-.27 1.27-.7 1.6z"/></svg>
+      Help
+    </button>
+    <div class="tab__indicator" id="js-tab-indicator"></div>
+  </nav>
+
+  <!-- ═══ PROFILE TAB ═══ -->
+  <section id="tab-profile" class="tab-panel tab-panel--active">
+    <!-- Quick Controls Card -->
+    <div class="quick-controls" id="js-quick-controls">
+      <div class="quick-controls__header">
+        <span class="quick-controls__title">⚡ Quick Controls</span>
+      </div>
+      <div class="quick-controls__grid">
+        <div class="qc-item">
+          <div class="qc-item__info">
+            <span class="qc-item__name">Memory</span>
+          </div>
+          <label class="toggle toggle--accent">
+            <input type="checkbox" id="qc-inject" class="toggle__input">
+            <span class="toggle__track"><span class="toggle__thumb"></span></span>
+          </label>
+        </div>
+        <div class="qc-item">
+          <div class="qc-item__info">
+            <span class="qc-item__name">Short Answers</span>
+          </div>
+          <label class="toggle toggle--accent">
+            <input type="checkbox" id="qc-short" class="toggle__input">
+            <span class="toggle__track"><span class="toggle__thumb"></span></span>
+          </label>
+        </div>
+        <div class="qc-item qc-item--mode">
+          <div class="qc-item__info">
+            <span class="qc-item__name">Mode</span>
+          </div>
+          <select class="qc-select" id="qc-mode">
+            <option value="normal">Normal</option>
+            <option value="compact">Compact</option>
+            <option value="strict">Strict</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Your Memory Profile</div>
+    <p class="section-desc">This context is prepended to every message you send on AI platforms.</p>
+
+    <div id="js-profile-form" class="form">
+      <div class="field">
+        <label class="field__label" for="f-name">
+          Name
+          <span class="field__counter" data-for="f-name">0/80</span>
+        </label>
+        <input class="field__input" id="f-name" name="name" type="text" placeholder="e.g. Ratul" maxlength="80">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-goal">
+          Goal
+          <span class="field__counter" data-for="f-goal">0/200</span>
+        </label>
+        <input class="field__input" id="f-goal" name="goal" type="text" placeholder="e.g. Become a Data Scientist" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-skills">
+          Skills
+          <span class="field__counter" data-for="f-skills">0/200</span>
+        </label>
+        <input class="field__input" id="f-skills" name="skills" type="text" placeholder="e.g. Python, SQL, Pandas, Matplotlib" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-preferences">
+          Preferences
+          <span class="field__counter" data-for="f-preferences">0/200</span>
+        </label>
+        <input class="field__input" id="f-preferences" name="preferences" type="text" placeholder="e.g. Short answers, code examples" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-notes">
+          Custom Notes
+          <span class="field__counter" data-for="f-notes">0/500</span>
+        </label>
+        <textarea class="field__input field__textarea" id="f-notes" name="customNotes" placeholder="Anything else the AI should know about you…" maxlength="500" rows="3"></textarea>
+      </div>
+
+      <div class="token-bar" id="js-token-bar">
+        <div class="token-bar__info">
+          <span class="token-bar__label">Memory size</span>
+          <span class="token-bar__value" id="js-token-value">—</span>
+        </div>
+        <div class="token-bar__track">
+          <div class="token-bar__fill" id="js-token-fill"></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="js-save-profile" class="btn btn--primary">Save Profile</button>
+        <span class="form-actions__saved" id="js-save-msg"></span>
+      </div>
+    </div>
+
+    <!-- Memory Preview -->
+    <div class="preview-section" id="js-preview-section">
+      <div class="preview-header">
+        <div class="section-label" style="margin-bottom:0">Injection Preview</div>
+        <button class="btn btn--ghost btn--sm" id="js-preview-toggle">Show</button>
+      </div>
+      <pre class="preview-box" id="js-preview-box" style="display:none"></pre>
+    </div>
+  </section>
+
+  <!-- ═══ SAVED TAB ═══ -->
+  <section id="tab-saved" class="tab-panel">
+    <div class="saved-header">
+      <div class="section-label" style="margin-bottom:0">
+        Saved Context
+        <span class="item-count" id="js-item-count"></span>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="js-add-item-btn">+ Add Note</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar" id="js-search-bar">
+      <svg class="search-bar__icon" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+      </svg>
+      <input class="search-bar__input" id="js-search-input" type="text" placeholder="Search notes…">
+    </div>
+
+    <!-- Tag Filters -->
+    <div class="tag-filters" id="js-tag-filters" style="display:none">
+      <button class="tag-chip tag-chip--active" data-tag="all">All</button>
+    </div>
+
+    <div class="add-item-form" id="js-add-item-form" style="display:none">
+      <textarea class="field__input field__textarea" id="js-add-item-text" placeholder="Enter a context note to save…" rows="2" maxlength="400"></textarea>
+      <div class="add-item-form__row">
+        <div class="add-item-form__tags">
+          <input class="tag-input" id="js-add-item-tag" type="text" placeholder="Tag (optional)" maxlength="20">
+        </div>
+        <div class="add-item-form__actions">
+          <button class="btn btn--primary btn--sm" id="js-add-item-save">Save Note</button>
+          <button class="btn btn--ghost btn--sm" id="js-add-item-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <ul class="item-list" id="js-item-list"></ul>
+
+    <div class="empty-state" id="js-empty-state" style="display:none">
+      <div class="empty-state__icon">📝</div>
+      <div class="empty-state__text">No saved notes yet.<br>Select text on any AI page or add one above.</div>
+    </div>
+    <div class="list-footer" id="js-list-footer" style="display:none">
+      <button class="btn btn--danger-ghost btn--sm" id="js-clear-all">Clear all</button>
+    </div>
+  </section>
+
+  <!-- ═══ SETTINGS TAB ═══ -->
+  <section id="tab-settings" class="tab-panel">
+    <div class="section-label">Injection</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Auto-inject memory</span>
+        <span class="toggle-row__desc">Prepend your profile to every message</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-inject" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Compact mode</span>
+        <span class="toggle-row__desc">Shorter injection — saves tokens</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-compact" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Smart Features</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Save text selection</span>
+        <span class="toggle-row__desc">Show button when you select text on AI pages</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-selection" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Auto-detect &amp; suggest</span>
+        <span class="toggle-row__desc">Suggest saving useful phrases you type</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-autodetect" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Show token count</span>
+        <span class="toggle-row__desc">Estimate tokens in Profile tab</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-tokens" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">PRO Features</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Token-saving prompt</span>
+        <span class="toggle-row__desc">Inject short system instruction for minimal answers</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-token-saving" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Focus mode</span>
+        <span class="toggle-row__desc">Inject only profile + pinned notes</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-focus" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__name">Token indicator</span>
+        <span class="toggle-row__desc">Show real-time token widget near AI input</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="s-indicator" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Platforms</div>
+    <p class="section-desc" style="margin-bottom:8px">Enable or disable memory injection per platform.</p>
+    <div class="platform-toggles">
+      <div class="toggle-row toggle-row--compact">
+        <div class="toggle-row__info">
+          <span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-chatgpt"></span>ChatGPT</span>
+        </div>
+        <label class="toggle"><input type="checkbox" id="p-chatgpt" class="toggle__input platform-toggle" data-platform="chatgpt"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+      </div>
+      <div class="toggle-row toggle-row--compact">
+        <div class="toggle-row__info">
+          <span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-claude"></span>Claude</span>
+        </div>
+        <label class="toggle"><input type="checkbox" id="p-claude" class="toggle__input platform-toggle" data-platform="claude"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+      </div>
+      <div class="toggle-row toggle-row--compact">
+        <div class="toggle-row__info">
+          <span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-gemini"></span>Gemini</span>
+        </div>
+        <label class="toggle"><input type="checkbox" id="p-gemini" class="toggle__input platform-toggle" data-platform="gemini"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+      </div>
+      <div class="toggle-row toggle-row--compact">
+        <div class="toggle-row__info">
+          <span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-perplexity"></span>Perplexity</span>
+        </div>
+        <label class="toggle"><input type="checkbox" id="p-perplexity" class="toggle__input platform-toggle" data-platform="perplexity"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+      </div>
+      <div class="toggle-row toggle-row--compact">
+        <div class="toggle-row__info">
+          <span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-deepseek"></span>DeepSeek</span>
+        </div>
+        <label class="toggle"><input type="checkbox" id="p-deepseek" class="toggle__input platform-toggle" data-platform="deepseek"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Data</div>
+    <div class="data-actions">
+      <button class="btn btn--outline btn--full" id="js-export">Export memory (JSON)</button>
+      <button class="btn btn--outline btn--full" id="js-import">Import memory (JSON)</button>
+      <input type="file" id="js-import-file" accept=".json" style="display:none">
+    </div>
+
+    <div class="shortcut-hint" id="js-shortcut-hint">
+      <span class="shortcut-hint__label">Keyboard shortcut</span>
+      <kbd class="shortcut-hint__key">Ctrl+Shift+M</kbd>
+      <span class="shortcut-hint__desc">Toggle injection on/off</span>
+    </div>
+  </section>
+
+  <!-- ═══ HELP TAB ═══ -->
+  <section id="tab-help" class="tab-panel">
+    <div class="help-section">
+      <div class="section-label">🚀 Getting Started</div>
+      <div class="help-steps">
+        <div class="help-step">
+          <span class="help-step__num">1</span>
+          <div class="help-step__content">
+            <strong>Fill your profile</strong>
+            <span>Go to Profile tab and add your name, skills, and preferences.</span>
+          </div>
+        </div>
+        <div class="help-step">
+          <span class="help-step__num">2</span>
+          <div class="help-step__content">
+            <strong>Visit any AI platform</strong>
+            <span>Open ChatGPT, Claude, Gemini, Perplexity, or DeepSeek.</span>
+          </div>
+        </div>
+        <div class="help-step">
+          <span class="help-step__num">3</span>
+          <div class="help-step__content">
+            <strong>Start chatting — memory auto-injects</strong>
+            <span>Your profile is silently prepended to every message you send.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="help-section">
+      <div class="section-label">⌨️ Slash Commands</div>
+      <p class="section-desc">Type these at the start of your message to control injection per-message.</p>
+      <div class="cmd-reference__list">
+        <div class="cmd-reference__item"><code>/no-memory</code><span>Skip memory injection for this message</span></div>
+        <div class="cmd-reference__item"><code>/only-profile</code><span>Inject only your profile (no saved notes)</span></div>
+        <div class="cmd-reference__item"><code>/strict</code><span>Ultra-minimal context (name + pinned only)</span></div>
+        <div class="cmd-reference__item"><code>/explain</code><span>Allow full explanation (disables short-answer mode)</span></div>
+        <div class="cmd-reference__item"><code>/detail</code><span>Full context + detailed answer</span></div>
+        <div class="cmd-reference__item"><code>/code</code><span>Code mode — include explanations with code</span></div>
+        <div class="cmd-reference__item"><code>/reset</code><span>Revert to default behavior</span></div>
+        <div class="cmd-reference__item"><code>/temp &lt;text&gt;</code><span>Add session-only temporary memory</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="help-section">
+      <div class="section-label">💡 Tips & Tricks</div>
+      <div class="help-tips">
+        <div class="help-tip">
+          <span class="help-tip__icon">📌</span>
+          <span><strong>Pin important notes</strong> — Pinned notes are always included, even in strict mode.</span>
+        </div>
+        <div class="help-tip">
+          <span class="help-tip__icon">🖱️</span>
+          <span><strong>Right-click to save</strong> — Select text on any AI page → right-click → "Save to AI Smart Memory".</span>
+        </div>
+        <div class="help-tip">
+          <span class="help-tip__icon">🎯</span>
+          <span><strong>Smart matching</strong> — The engine matches your question keywords to saved notes automatically.</span>
+        </div>
+        <div class="help-tip">
+          <span class="help-tip__icon">🔒</span>
+          <span><strong>100% private</strong> — All data stays on your device. Nothing is sent to any server.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="help-section">
+      <div class="section-label">⌨️ Keyboard Shortcuts</div>
+      <div class="shortcut-hint" style="margin-top:0">
+        <kbd class="shortcut-hint__key">Ctrl+Shift+M</kbd>
+        <span class="shortcut-hint__desc">Toggle memory injection on/off</span>
+      </div>
+    </div>
+
+    <div class="help-footer">
+      <span>AI Smart Memory v2.5.0 PRO</span>
+      <span>Privacy-first · All data stored locally</span>
+    </div>
+  </section>
+
+  <div class="popup-toast" id="js-popup-toast"></div>
+
+  <script src="../storage/storage.js"></script>
+  <script src="../utils/tokenizer.js"></script>
+  <script src="../utils/commandParser.js"></script>
+  <script src="../utils/contextEngine.js"></script>
+  <script src="popup.js"></script>
+
+</body>
+</html>
