@@ -1,0 +1,402 @@
+PROMPTSYNC PRO v3.0.0 — USER MANUAL
+================================================================================
+
+
+GETTING STARTED
+---------------
+
+After installing the extension:
+
+1. Click the PromptSync icon in Chrome's toolbar to open the popup.
+2. Fill in your profile (name, role, goals) in the Profile tab.
+3. Add context notes in the Saved tab.
+4. Navigate to any supported AI site and start chatting.
+
+PromptSync automatically injects your context before every message. A token
+badge on the AI page confirms injection is active.
+
+Supported platforms: ChatGPT, Claude, Gemini, Perplexity, DeepSeek.
+
+
+================================================================================
+THE POPUP DASHBOARD
+================================================================================
+
+The popup has 5 tabs: Profile, Saved, Modes, Settings, Help.
+
+
+PROFILE TAB
+-----------
+
+Your profile is the core of what gets injected. Fill in:
+
+  Name          Your name or handle
+  Role          Your job, study role, or identity (e.g. "Senior React Dev")
+  Goals         What you are trying to accomplish
+  Skills        Technologies, subjects, or skills you have
+  Preferences   How you like responses (e.g. "No code comments, use TypeScript")
+  Custom Notes  Freeform profile-level notes
+
+Switching Profiles:
+  - Use the profile dropdown at the top of the tab.
+  - Built-in profiles: Default, Student, Developer.
+  - Create new profiles with the + button.
+  - Delete custom profiles with the trash icon.
+
+Profile Preview:
+  Scroll down to see exactly what will be injected with the current profile.
+
+
+SAVED TAB
+---------
+
+Saved notes are context memories that get injected alongside your profile.
+
+Adding a note:
+  1. Type your note in the text area.
+  2. Optionally add tags (e.g. react, work).
+  3. Set priority: High / Medium / Low.
+  4. Toggle Pin to always include it regardless of relevance scoring.
+  5. Click Save.
+
+Note features:
+  Enable/Disable   Toggle individual notes on or off without deleting them
+  Pin              Always inject this note regardless of message context
+  Priority         High notes score higher in smart selection
+  Tags             Organize notes by topic
+  Search           Filter notes by text or tag
+  Drag and Drop    Reorder notes manually
+  Bulk Delete      Select multiple notes and delete at once
+
+Smart Keyword Matching:
+  PromptSync analyzes your message and automatically selects the most relevant
+  saved notes. For example, if you ask about React hooks, notes tagged "react"
+  or containing "hooks" will be prioritized.
+
+
+MODES TAB
+---------
+
+Task Modes change the instruction injected with your context.
+
+Built-in modes:
+  Coding   "Give clean, minimal, working code. No explanation unless asked."
+  Study    "Explain simply step by step. Use easy words. Give examples."
+  Short    "Answer in the shortest possible way."
+
+Creating a custom mode:
+  1. Click + New Mode.
+  2. Give it a name and write a custom instruction.
+  3. Select it from the mode dropdown or activate with /mode your-mode-name.
+
+Custom Commands are also managed in this tab. See the Command System section.
+
+
+SETTINGS TAB
+------------
+
+  Injection        Enable/disable injection globally; set injection delay
+  Template         Edit the injection format and toggle sections
+  Response Control Enable/edit the default short-answer instruction
+  Security         Enable/disable sensitive data scanning
+  Decay            Enable memory decay; set number of days before suggestion
+  Auto-Switch      Map domains to profiles
+  Platforms        Enable/disable injection per platform individually
+  Advanced         Max memories, strict mode, debug mode, max token limit
+  Floating Panel   Set panel visibility (badge only / full panel / hidden)
+
+
+HELP TAB
+--------
+
+  - Full list of available commands with descriptions.
+  - Tips and usage examples.
+  - Button to reset the onboarding overlay.
+
+
+================================================================================
+INJECTION SYSTEM
+================================================================================
+
+What Gets Injected
+------------------
+
+When you send a message, PromptSync builds a context block:
+
+  [USER CONTEXT START]
+  Name: {user_name}
+  Role: {user_role}
+  Goals: {user_goals}
+  Memory: {memories}
+  Instruction: {instruction}
+  [USER CONTEXT END]
+
+Each section can be independently toggled on or off in Settings > Template.
+The template format itself is fully editable.
+
+How Notes Are Selected
+----------------------
+
+  1. Keywords are extracted from your current message (stop words removed).
+  2. Each enabled note is scored: keyword overlap + priority bonus + pin bonus.
+  3. Top N notes are selected (N = max memories setting in Advanced).
+  4. Pinned notes are always included regardless of their score.
+
+Token-Saving Default
+--------------------
+
+When no task mode is active, PromptSync injects:
+  "Answer as short as possible. No explanation unless asked."
+
+This can be disabled in Settings > Response Control.
+Override per-message with /explain or /detail.
+
+
+================================================================================
+COMMAND SYSTEM
+================================================================================
+
+Type commands anywhere in your message. They are stripped before sending —
+the AI never sees them.
+
+Built-in Commands
+-----------------
+
+  /no-memory        Skip injection entirely for this message
+  /only-profile     Inject profile only, no saved notes
+  /strict           Minimal injection: name and pinned notes only
+  /explain          Allow full explanation (disables short-answer)
+  /detail           Full context + request detailed response
+  /code             Activate coding mode for this message
+  /short            Force shortest possible answer
+  /mode <name>      Activate a named task mode for this message
+  /reset            Revert to default injection behavior
+  /temp <text>      Add session-only memory (not saved permanently)
+
+Example usage:
+  /code How do I debounce an input in React?
+
+This activates coding mode for that one message, injecting the coding
+instruction instead of the default short-answer instruction.
+
+Custom Commands
+---------------
+
+Create your own commands in Modes > Custom Commands:
+
+  1. Click + New Command.
+  2. Set the command name (e.g. /fast).
+  3. Configure actions:
+       - Switch task mode
+       - Enable or disable memory injection
+       - Skip system prompt
+       - Inject custom instruction text
+
+Custom commands use predefined action types only. No code execution.
+
+
+================================================================================
+TASK MODES
+================================================================================
+
+Task modes change the instruction injected with your context.
+
+  Coding   "Give clean, minimal, working code. No explanation unless asked."
+  Study    "Explain simply step by step. Use easy words. Give examples."
+  Short    "Answer in the shortest possible way."
+  Custom   Any instruction text you define
+
+Setting a mode:
+  - Globally: use the mode dropdown in the popup or floating panel
+  - Per message: type /mode coding, /mode study, etc.
+  - Disable for one message: type /reset
+
+When a task mode is active, the token-saving default instruction is suppressed.
+
+
+================================================================================
+FLOATING PANEL
+================================================================================
+
+A persistent overlay appears on all supported AI pages.
+
+Token Badge
+-----------
+
+Always visible. Shows current injection token count, e.g. "120 tok".
+Click the badge to expand the full control panel.
+
+Full Panel
+----------
+
+  Memory toggle      Enable or disable context injection instantly
+  Mode switcher      Change task mode without opening the popup
+  Token breakdown    See input / memory / session token counts separately
+  Context window     Color-coded progress bar showing percentage of platform
+                     token limit used (green > yellow > red)
+  Session reset      Clears /temp memories added during the session
+
+The panel is draggable. Your position is saved across sessions.
+Click outside to collapse it.
+Visibility options: badge only / full panel / hidden — set in Settings.
+
+
+================================================================================
+TOKEN TRACKING
+================================================================================
+
+PromptSync uses the o200k_base BPE tokenizer (same as GPT-4o) for accurate
+token counting.
+
+Tracked values:
+  Input tokens    Your typed message
+  Memory tokens   Your injected context block
+  Session total   Cumulative total across all messages this session
+
+Context window limits by platform:
+
+  ChatGPT      128,000 tokens
+  Claude       200,000 tokens
+  Gemini     1,000,000 tokens
+  Perplexity    16,000 tokens
+  DeepSeek      64,000 tokens
+
+Token calculation is debounced at 300ms. BPE results are cached (200-entry LRU)
+for performance.
+
+
+================================================================================
+SECURITY GUARD
+================================================================================
+
+Before any note is saved, PromptSync scans for sensitive data.
+
+Detected patterns:
+
+  OpenAI API keys        sk-...
+  Stripe keys            pk_live_..., sk_live_...
+  AWS access keys        AKIA...
+  GitHub tokens          ghp_...
+  Private keys           -----BEGIN PRIVATE KEY-----
+  Bearer tokens          Bearer ...
+  Password patterns      password:, passwd=, secret:
+  Credit card numbers    13 to 19 digits, Luhn-validated
+
+If detected, a warning popup appears. You can override and save anyway,
+or cancel.
+
+To disable scanning: Settings > Security > Detect Sensitive Data > Off.
+
+
+================================================================================
+MEMORY DECAY
+================================================================================
+
+Prevents context bloat by flagging notes you no longer use.
+
+How it works:
+  - Every note tracks a lastUsed timestamp, updated each time it is injected.
+  - After a configurable number of days (default: 7), unused notes are flagged.
+  - A decay banner appears in the Saved tab listing all stale notes.
+  - Click "Remove All Stale" to delete them in one click.
+  - Pinned notes are exempt. They never decay.
+
+Configure in: Settings > Decay > enable toggle + set days threshold.
+
+
+================================================================================
+PROFILE AUTO-SWITCH
+================================================================================
+
+Automatically switch to a specific profile when you visit a domain.
+
+Setup:
+  1. Go to Settings > Auto-Switch.
+  2. Enable the toggle.
+  3. Add a domain to profile mapping.
+
+Example mappings:
+  claude.ai          Student
+  chatgpt.com        Developer
+  gemini.google.com  Default
+
+Multiple mappings are supported. If no mapping matches, the last active
+profile stays selected.
+
+
+================================================================================
+IMPORT AND EXPORT
+================================================================================
+
+Export all your data:
+  Settings > Advanced > Export Data
+  Saves a file named promptsync-[date].json
+
+Import data:
+  Settings > Advanced > Import Data
+  Select a .json file previously exported from PromptSync
+
+The export includes all profiles, saved notes, task modes, custom commands,
+and settings. Data is validated on import (length limits and type checking)
+to prevent corruption.
+
+
+================================================================================
+KEYBOARD SHORTCUT
+================================================================================
+
+Ctrl + Shift + M  (Windows / Linux)
+Cmd  + Shift + M  (Mac)
+
+Opens the PromptSync popup from anywhere in Chrome.
+
+Context menu:
+  Right-click any selected text on a webpage and choose
+  "Save to PromptSync" to quickly add it as a note.
+
+
+================================================================================
+DARK MODE
+================================================================================
+
+Three theme options:
+
+  Light    Always light theme
+  Dark     Always dark theme
+  System   Follows your operating system preference automatically
+
+Cycle themes with the theme button in the popup header.
+The floating panel and toast notifications use glassmorphism effects in dark mode.
+
+
+================================================================================
+ADVANCED SETTINGS
+================================================================================
+
+Found in Settings > Advanced:
+
+  Injection Delay    Delay in milliseconds before injection fires
+  Max Memories       Maximum number of notes to inject per message
+  Strict Mode        Only inject name and pinned notes by default (globally)
+  Debug Mode         Log injection details to the browser console
+  Max Token Limit    Hard cap on injected tokens per message
+
+
+================================================================================
+TIPS AND BEST PRACTICES
+================================================================================
+
+  Keep notes atomic          One fact per note works better than long paragraphs
+  Use tags                   Tags make search and smart selection more accurate
+  Pin sparingly              Pinned notes always inject — only pin universal context
+  Use task modes             Switch modes instead of rewriting your question
+  Use /temp for sessions     Temporary notes like "today's task: fix login bug"
+                             do not clutter your permanent storage
+  Watch the token badge      If token count is high, delete old notes or use /strict
+  Set per-domain profiles    Use Auto-Switch so each AI platform gets the right
+                             profile automatically
+
+
+================================================================================
+PromptSync PRO v3.0.0 — Stop repeating. Start syncing.
+================================================================================
