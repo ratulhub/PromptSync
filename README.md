@@ -1,173 +1,180 @@
-# ⚡ PromptSync PRO
+<div align="center">
 
-> **Your context. Synced with AI.**
-> Less typing, smarter AI, better results.
+# 🔄 PromptSync PRO
 
-PromptSync is a smart AI memory assistant that automatically adds your context to AI chats to save time and improve answers. It remembers your goals, preferences, and important info, then injects them into every message — so you stop repeating yourself and start getting better responses.
+**Your context. Synced with AI.**
 
-**Privacy-first** — all data stays on your device. Nothing is ever sent to any server.
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/your-repo/promptsync)
+[![Manifest](https://img.shields.io/badge/Manifest-V3-green.svg)](https://developer.chrome.com/docs/extensions/mv3/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Privacy](https://img.shields.io/badge/privacy-100%25%20local-brightgreen.svg)](#privacy)
 
----
+> Stop repeating yourself. PromptSync automatically injects your personal context into every AI chat — so you get better, more relevant answers without typing your preferences every time.
 
-## 🎯 What It Does
+**Works on:** ChatGPT · Claude · Gemini · Perplexity · DeepSeek
 
-| Problem | PromptSync Solution |
-|---------|-------------------|
-| Typing "I'm a developer, I use React..." every chat | Your profile auto-injects |
-| AI gives long, unwanted explanations | Token-saving prompt enforces short answers |
-| Forgetting to mention project context | Saved notes match to your question keywords |
-| Different needs on different AI platforms | Per-platform profiles auto-switch |
-| Wasting tokens on repeated context | Smart injection minimizes token usage |
+</div>
 
 ---
 
-## ✨ Features
+## 📖 Table of Contents
 
-### 🧠 Smart Memory System
-- **Profile injection** — name, role, goals, skills auto-prepend to every message
-- **Multi-profile support** — switch between Student, Developer, or custom profiles
-- **Auto-switch per site** — use different profiles on ChatGPT vs Claude vs Gemini
-- **Saved context notes** — add, pin, tag, prioritize, enable/disable individual notes
-- **Keyword matching** — notes relevant to your question get selected automatically
-- **Priority system** — high/medium/low priority with visual indicators
-- **Memory decay** — suggests removing unused notes after configurable days
-
-### ⌨️ Command System
-- `/no-memory` — skip injection for this message
-- `/strict` — ultra-minimal context (name + pinned only)
-- `/code` — coding mode with clean code output
-- `/short` — force shortest possible answer
-- `/mode study` — switch to study mode with step-by-step explanations
-- `/temp <text>` — add session-only temporary memory
-- **Custom commands** — create your own like `/fast` or `/deep`
-
-### 🎛️ Task Modes
-- **Coding** — clean, working code, no unnecessary explanation
-- **Study** — step-by-step, simple words, examples
-- **Short** — shortest possible answer
-- **Custom** — create your own modes with custom instructions
-
-### 📝 Customizable Template
-- Edit the injection format with placeholders: `{user_name}`, `{user_role}`, `{user_goals}`, `{memories}`, `{instruction}`
-- Toggle sections on/off (name, role, goals, memory, instruction)
-- Editable response control instructions
-
-### ⚡ Floating Panel
-- Token badge always visible on AI pages
-- Click to expand: memory toggle, mode switch, token breakdown
-- Draggable and repositionable
-- Session token tracking with context window progress bar
-
-### 🔒 Security Guard
-- Detects API keys (OpenAI, Stripe, AWS, GitHub, GitLab)
-- Catches passwords, credit card numbers, private keys
-- Warns before saving sensitive data
-
-### 🌙 Design
-- Clean, minimal, non-intrusive UI
-- Dark/light/system theme
-- Glassmorphism floating panel
-- Smooth micro-animations
+- [What is PromptSync?](#what-is-promptsync)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [User Manual](#user-manual)
+- [Architecture](#architecture)
+- [Privacy & Security](#privacy--security)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🌐 Supported Platforms
+## What is PromptSync?
 
-| Platform | Status |
-|----------|--------|
-| ChatGPT (chat.openai.com / chatgpt.com) | ✅ Full support |
-| Claude (claude.ai) | ✅ Full support |
-| Gemini (gemini.google.com) | ✅ Full support |
-| Perplexity (perplexity.ai) | ✅ Full support |
-| DeepSeek (chat.deepseek.com) | ✅ Full support |
+Every new AI chat starts from zero. You find yourself typing *"I'm a developer, I use React, keep answers short"* hundreds of times across hundreds of sessions.
 
-Each platform can be individually enabled/disabled.
+**PromptSync fixes this.**
 
----
-
-## 📁 Architecture
+It stores your profile and saved notes locally, then silently prepends them to every message before it sends. The AI sees your context + your question as a single, rich prompt — giving you smarter, more personalized responses instantly.
 
 ```
-promptsync/
-├── manifest.json          — Manifest V3 configuration
-├── background/
-│   └── background.js      — Service worker: context menu, shortcuts, alarms
-├── content/
-│   ├── content.js         — Core injection pipeline
-│   ├── content.css        — All injected UI styles
-│   ├── floatingPanel.js   — Token badge + expandable control panel
-│   └── onboarding.js      — First-run welcome overlay
-├── popup/
-│   ├── popup.html         — 5-tab dashboard UI
-│   ├── popup.js           — All popup logic
-│   └── popup.css          — Popup styles with CSS variables
-├── storage/
-│   └── storage.js         — Central data layer (chrome.storage.local)
+User types:    "What's the best way to handle async errors?"
+AI receives:   [USER CONTEXT START]
+               Name: Alex | Role: Senior React Developer
+               Goals: Build scalable apps, avoid over-engineering
+               Memory: Prefers TypeScript, uses React Query, dislikes Redux
+               Instruction: Keep answer short. No extra explanation.
+               [USER CONTEXT END]
+               What's the best way to handle async errors?
+```
+
+---
+
+## Features
+
+| # | Feature | Description |
+|---|---------|-------------|
+| F1 | **Multi-Profile System** | Store profiles for different roles (Default, Student, Developer, Custom) |
+| F2 | **Profile Auto-Switch** | Auto-switch profiles per domain (claude.ai → Student, chatgpt.com → Dev) |
+| F3 | **Smart Context Injection** | Customizable template with toggleable sections |
+| F4 | **Token-Saving Mode** | Default short-answer instruction to reduce verbose responses |
+| F5 | **Command System** | 12 built-in slash commands + user-defined custom commands |
+| F6 | **Custom Commands** | Create `/fast`, `/deep` etc. with predefined action triggers |
+| F7 | **Task Modes** | Coding / Study / Short modes with custom instruction text |
+| F8 | **Saved Context Notes** | Tagged, prioritized, searchable notes with smart keyword matching |
+| F9 | **Memory Decay** | Auto-suggests removal of stale, unused notes |
+| F10 | **Security Guard** | Scans for API keys, passwords, credit cards before saving |
+| F11 | **Custom Injection Template** | Edit exact format + placeholders of injected context |
+| F12 | **Response Control** | Global custom instruction appended to every injection |
+| F13 | **Floating Panel** | Token badge + control panel overlay on AI pages |
+| F14 | **Real-Time Token Tracking** | Accurate BPE token counting with per-platform context window % |
+| F15 | **Dark Mode** | Light / Dark / System with glassmorphism effects |
+| F16 | **Onboarding** | First-run 3-step visual guide |
+
+---
+
+## Installation
+
+### From Chrome Web Store *(recommended)*
+> Coming soon — link will be added after review approval.
+
+### Manual (Developer Mode)
+
+1. Download or clone this repository:
+   ```bash
+   git clone https://github.com/your-username/promptsync.git
+   ```
+
+2. Open Chrome and go to `chrome://extensions/`
+
+3. Enable **Developer Mode** (top-right toggle)
+
+4. Click **Load unpacked** and select the project folder
+
+5. The PromptSync icon will appear in your Chrome toolbar
+
+> **Note:** The extension uses Manifest V3 and requires Chrome 88+.
+
+---
+
+## Quick Start
+
+1. Click the PromptSync icon in your toolbar
+2. Go to the **Profile** tab and fill in your name, role, and goals
+3. Go to the **Saved** tab and add a few context notes (e.g., "I prefer TypeScript")
+4. Open ChatGPT, Claude, or any supported AI platform
+5. Type a message and send — your context is injected automatically!
+
+You'll see a small token badge (e.g., `120 tok`) on the page confirming injection is active.
+
+---
+
+## User Manual
+
+→ See **[MANUAL.md](MANUAL.md)** for complete usage documentation including all commands, modes, settings, and advanced configuration.
+
+---
+
+## Architecture
+
+```
+manifest.json (Manifest V3)
+├── background/background.js      Service worker (context menu, shortcuts, decay alarm)
+├── storage/storage.js            Central data layer (profiles, notes, modes, settings)
 ├── utils/
-│   ├── tokenizer.js       — BPE token counting (o200k_base)
-│   ├── contextEngine.js   — Smart context selection + template engine
-│   ├── commandParser.js   — Slash command parser + custom commands
-│   └── securityGuard.js   — Sensitive data detection
-├── vendor/
-│   └── o200k_base.js      — GPT tokenizer library
-├── icons/
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-└── build.sh               — Release build script
+│   ├── tokenizer.js              BPE token counter (o200k_base + heuristic fallback)
+│   ├── contextEngine.js          Smart context selection + template engine
+│   ├── commandParser.js          Slash command parser (built-in + custom)
+│   └── securityGuard.js          Sensitive data scanner (API keys, CC, passwords)
+├── content/
+│   ├── content.js                Core injection pipeline + platform detection
+│   ├── content.css               Injected UI styles
+│   ├── floatingPanel.js          Token badge + floating control panel
+│   └── onboarding.js             First-run overlay
+├── popup/
+│   ├── popup.html                5-tab dashboard UI
+│   ├── popup.js                  All popup logic
+│   └── popup.css                 CSS variables, light/dark, all components
+└── vendor/o200k_base.js          GPT tokenizer library
 ```
 
-### Data Flow
+### Supported Platforms
 
-```
-User Input → Parse Commands → Build Context (Engine) → Inject → Track Tokens
-                ↓                    ↓
-           Custom Commands    Template + Profile + Notes + Mode
-```
-
-### Storage Keys
-All data in `chrome.storage.local`:
-- `asm_profiles` — multi-profile data
-- `asm_items` — saved context notes with keywords, priority, decay
-- `asm_settings` — all settings including platform toggles, auto-switch, decay
-- `asm_task_modes` — coding/study/short/custom modes
-- `asm_custom_commands` — user-defined slash commands
-- `asm_template` — customizable injection template
-- `asm_panel_position` — floating panel coordinates
+| Platform | Input Type | Context Window |
+|----------|-----------|----------------|
+| ChatGPT | ProseMirror | 128K tokens |
+| Claude | ProseMirror | 200K tokens |
+| Gemini | contenteditable | 1M tokens |
+| Perplexity | textarea | 16K tokens |
+| DeepSeek | textarea | 64K tokens |
 
 ---
 
-## 🚀 Installation
+## Privacy & Security
 
-1. Download or clone this repository
-2. Open `chrome://extensions` in Chrome
-3. Enable **Developer mode** (top right)
-4. Click **Load unpacked** → select the project folder
-5. Pin PromptSync to your toolbar
-6. Open any supported AI platform and start chatting
-
----
-
-## 📜 Version History
-
-| Version | Highlights |
-|---------|-----------|
-| v3.0.0  | Multi-profiles, auto-switch, custom commands, floating panel, task modes, template editor, security guard, memory decay, onboarding |
-| v2.5.0  | Token tracking, command system, context engine, dark mode |
-| v2.0.0  | Smart injection, keyword matching, platform support |
-| v1.0.0  | Basic memory storage and injection |
+- ✅ **100% local** — All data stored in `chrome.storage.local`. Nothing ever leaves your device.
+- ✅ **Zero network requests** — No analytics, no telemetry, no external API calls.
+- ✅ **Security scanning** — Detects API keys, passwords, credit card numbers before saving
+- ✅ **XSS prevention** — All output is HTML-escaped
+- ✅ **No code execution** — Custom commands use predefined action sets only (no `eval`)
+- ✅ **Input sanitization** — Length limits and type validation on import
 
 ---
 
-## 🔐 Privacy
+## Contributing
 
-- **Zero network requests** — nothing leaves your device
-- **No analytics** — no tracking, no telemetry
-- **Local-only storage** — all data in `chrome.storage.local`
-- **Open source** — inspect every line of code
-- **Security guard** — actively prevents saving sensitive data
+Pull requests are welcome! For major changes, please open an issue first.
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m 'Add my feature'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Open a Pull Request
 
 ---
 
-**PromptSync PRO v3.0.0**
-*Stop repeating. Start syncing.*
+## License
+
+[MIT](LICENSE) — © 2024 PromptSync
