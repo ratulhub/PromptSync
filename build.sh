@@ -6,7 +6,7 @@
 # Exit on error
 set -e
 
-VERSION="3.0.0"
+VERSION="3.1.0"
 BUILD_DIR="build"
 ZIP_NAME="promptsync-v${VERSION}.zip"
 CRX_NAME="promptsync-v${VERSION}.crx"
