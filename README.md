@@ -13,6 +13,12 @@
 
 **Works on:** ChatGPT · Claude · Gemini · Perplexity · DeepSeek
 
+---
+
+<video src="YOUR_VIDEO_LINK.mp4" autoplay loop muted playsinline width="100%"></video>
+
+> 📺 *See PromptSync in action — context injected automatically, every time.*
+
 </div>
 
 ---
@@ -78,8 +84,7 @@ AI receives:   [USER CONTEXT START]
 
 ### Manual (Developer Mode)
 
-1. Download this repository as .zip and extract  (recomanded)  or
-   clone the repo,
+1. Clone or download this repository:
    ```bash
    git clone https://github.com/ratulhub/promptsync.git
    ```
@@ -88,7 +93,7 @@ AI receives:   [USER CONTEXT START]
 4. Click **Load unpacked** → select the project folder
 5. Pin the PromptSync icon to your Chrome toolbar
 
-> Requires Chrome 88+ (Manifest V3).
+<video src="[YOUR_VIDEO_LINK.mp4](https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e)" autoplay loop muted playsinline width="100%"></video>
 
 ---
 
@@ -272,9 +277,7 @@ A persistent overlay on all supported AI pages.
 | Perplexity | 16,000 tokens |
 | DeepSeek | 64,000 tokens |
 
-Token counting uses the **o200k_base BPE tokenizer** (same as GPT-4o) for accuracy. Results cached for performance.
-
-The panel is draggable — position is saved across sessions.
+Token counting uses the **o200k_base BPE tokenizer** (same as GPT-4o) for accuracy. The panel is draggable — position saved across sessions.
 
 ---
 
@@ -471,5 +474,7 @@ promptsync/
 **PromptSync PRO v3.1.0 — Stop repeating. Start syncing.**
 
 *Built by [MD. Abdur Rahim Ratul](https://ratul.site)*
+
+<sub>Claude token counter inspired by <a href="https://github.com/she-llac/claude-counter">she-llac/claude-counter</a></sub>
 
 </div>
