@@ -228,17 +228,17 @@
      INJECTION PIPELINE
   ═══════════════════════ */
   async function injectMemory(el) {
-    if (alreadyInjectedThisSend) return false;
+    const rawText = getInputText(el);
+    if (alreadyInjectedThisSend) return rawText;
 
     try {
-      if (!(await checkPlatformEnabled())) return false;
+      if (!(await checkPlatformEnabled())) return rawText;
       const settings = await MemoryStorage.getSettings();
-      if (!settings.injectEnabled) return false;
+      if (!settings.injectEnabled) return rawText;
       debugMode = settings.advanced?.debugMode || false;
 
-      const rawText = getInputText(el);
-      if (!rawText.trim()) return false;
-      if (hasInjectionMarker(rawText)) { alreadyInjectedThisSend = true; return false; }
+      if (!rawText.trim()) return rawText;
+      if (hasInjectionMarker(rawText)) { alreadyInjectedThisSend = true; return rawText; }
 
       alreadyInjectedThisSend = true;
 
@@ -272,9 +272,9 @@
       // Step 2: Skip?
       if (overrides.skipInjection) {
         showToast('Memory skipped', 'info');
-        return true;
+        return rawText;
       }
-      if (!cleanText.trim()) return false;
+      if (!cleanText.trim()) return rawText;
 
       // Step 3: Build context
       let prefix = '';
@@ -290,7 +290,7 @@
         prefix = `[System: ${sysPrompt}]\n${prefix}`;
       }
 
-      if (!prefix) return false;
+      if (!prefix) return rawText;
 
       if (debugMode) {
         console.log('[ASM] Injection prefix:', prefix);
@@ -327,7 +327,7 @@
       return true;
     } catch (err) {
       console.warn('[ASM] Injection failed:', err);
-      return false;
+      return rawText || true;
     }
   }
 
