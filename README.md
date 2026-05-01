@@ -15,7 +15,7 @@
 
 ---
 
-<video src="YOUR_VIDEO_LINK.mp4" autoplay loop muted playsinline width="100%"></video>
+<video src="https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e" autoplay loop muted playsinline width="100%"></video>
 
 > 📺 *See PromptSync in action — context injected automatically, every time.*
 
@@ -93,7 +93,7 @@ AI receives:   [USER CONTEXT START]
 4. Click **Load unpacked** → select the project folder
 5. Pin the PromptSync icon to your Chrome toolbar
 
-<video src="[YOUR_VIDEO_LINK.mp4](https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e)" autoplay loop muted playsinline width="100%"></video>
+> Requires Chrome 88+ (Manifest V3).
 
 ---
 
