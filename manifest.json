@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PromptSync PRO",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Your context, synced with AI. PromptSync automatically injects your goals, preferences, and memory into AI chats — less typing, smarter AI, better results. Works on ChatGPT, Claude, Gemini, Perplexity, and DeepSeek.",
   "permissions": [
     "storage",
