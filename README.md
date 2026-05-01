@@ -13,12 +13,6 @@
 
 **Works on:** ChatGPT · Claude · Gemini · Perplexity · DeepSeek
 
----
-
-<video src="https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e" autoplay loop muted playsinline width="100%"></video>
-
-> 📺 *See PromptSync in action — context injected automatically, every time.*
-
 </div>
 
 ---
@@ -94,6 +88,16 @@ AI receives:   [USER CONTEXT START]
 5. Pin the PromptSync icon to your Chrome toolbar
 
 > Requires Chrome 88+ (Manifest V3).
+
+<br>
+
+<div align="center">
+
+<video src="https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e" autoplay loop muted playsinline width="90%"></video>
+
+*📦 Installation walkthrough — follow along to get set up in under a minute.*
+
+</div>
 
 ---
 
