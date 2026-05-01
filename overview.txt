@@ -1,5 +1,5 @@
 ================================================================================
-                         PromptSync PRO v3.0.0
+                         PromptSync PRO v3.1.0
                      COMPLETE TECHNICAL OVERVIEW
 ================================================================================
 
@@ -335,5 +335,5 @@
   Content scripts re-injected on extension update.
 
 ================================================================================
-  PromptSync PRO v3.0.0 — Stop repeating. Start syncing.
+  PromptSync PRO v3.1.0 — Stop repeating. Start syncing.
 ================================================================================
