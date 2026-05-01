@@ -56,7 +56,12 @@
        Disabled automatically when task mode is active.
        Per-message override with /explain or /detail commands.
 
-  [F5] COMMAND SYSTEM (12 BUILT-IN + CUSTOM)
+  [F5] COMMAND SYSTEM (BUILT-IN + CUSTOM)
+       /research      — Switch to Researcher role
+       /dev           — Switch to Developer role
+       /design        — Switch to Designer role
+       /business      — Switch to Business role
+       /writer        — Switch to Writer role
        /no-memory     — skip injection for this message
        /only-profile  — inject only profile (no saved notes)
        /strict        — ultra-minimal (name + pinned only)
@@ -64,7 +69,6 @@
        /detail        — full context + detailed answer
        /code          — coding assistant mode
        /short         — force shortest answer
-       /mode <name>   — switch task mode (coding/study/short/custom)
        /reset         — revert to default
        /temp <text>   — add session-only memory
        + User-defined custom commands
@@ -78,12 +82,14 @@
        No arbitrary code execution. Only preset actions.
        Create/edit/delete from Modes tab.
 
-  [F7] TASK MODES (3 BUILT-IN + CUSTOM)
-       Coding: "Give clean, minimal, working code. No explanation unless asked."
-       Study:  "Explain simply step by step. Use easy words. Give examples."
-       Short:  "Answer in the shortest possible way."
-       Custom: User-defined modes with custom instruction text.
-       Set active mode globally or per-message with /mode command.
+  [F7] ROLE-BASED ENGINE
+       Researcher: "Think deeply, analyze critically..."
+       Developer: "Provide clean, optimized, production-ready code."
+       Designer: "Focus on modern, clean, user-friendly design."
+       Business: "Strategic business expert..."
+       Writer: "Write clearly, naturally..."
+       Strict injection format: [ROLE] ... [/ROLE] and [STYLE] ... [/STYLE].
+       Fail-safe: skips injection if user manually types "act as..." or "you are...".
 
   [F8] SAVED CONTEXT NOTES
        Add/edit/delete notes with text, tags, priority, pin status.
@@ -141,10 +147,14 @@
        Cycle with header button. CSS variables for smooth switching.
        Glassmorphism effects on floating panel and toasts.
 
-  [F16] ONBOARDING
-       First-run overlay with 3-step visual guide.
-       Only shows once per version (tracks version in settings).
-       "Got it" and "Skip" buttons with smooth fade-out.
+  [F16] PREVIEW SYSTEM
+       Optionally intercept send action.
+       Injects context into the textbox but waits for manual user confirmation.
+       Allows editing the generated prompt.
+
+  [F17] SANDBOXED CLAUDE COUNTER
+       Independent script targeting ONLY claude.ai.
+       Complete token awareness without conflicting with PromptSync Core.
 
 ================================================================================
   3. ARCHITECTURE

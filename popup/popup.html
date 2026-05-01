@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptSync PRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__brand">
+      <div class="header__logo">
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#e06c40">
+          <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/>
+          <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+        </svg>
+      </div>
+      <span class="header__title">PromptSync</span>
+      <span class="header__version">PRO</span>
+    </div>
+    <div class="header__controls">
+      <button class="header__theme-btn" id="js-theme-toggle" title="Toggle theme">
+        <svg class="theme-icon theme-icon--light" viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
+        <svg class="theme-icon theme-icon--dark" viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+      </button>
+      <div class="header__badge" id="js-status-badge" title="Status">
+        <span class="badge__dot"></span>
+        <span class="badge__label">Active</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab tab--active" data-tab="profile">Profile</button>
+    <button class="tab" data-tab="saved">Saved</button>
+    <button class="tab" data-tab="roles">Roles</button>
+    <button class="tab" data-tab="settings">Settings</button>
+    <button class="tab" data-tab="help">Help</button>
+    <div class="tab__indicator" id="js-tab-indicator"></div>
+  </nav>
+
+  <!-- ═══ PROFILE TAB ═══ -->
+  <section id="tab-profile" class="tab-panel tab-panel--active">
+    <!-- Quick Controls -->
+    <div class="quick-controls">
+      <div class="quick-controls__grid">
+        <div class="qc-item">
+          <span class="qc-item__name">Memory</span>
+          <label class="toggle toggle--accent"><input type="checkbox" id="qc-inject" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+        </div>
+        <div class="qc-item">
+          <span class="qc-item__name">Short</span>
+          <label class="toggle toggle--accent"><input type="checkbox" id="qc-short" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+        </div>
+        <div class="qc-item qc-item--mode">
+          <span class="qc-item__name">Mode</span>
+          <select class="qc-select" id="qc-mode">
+            <option value="normal">Normal</option>
+            <option value="compact">Compact</option>
+            <option value="strict">Strict</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Switcher -->
+    <div class="profile-switcher">
+      <div class="profile-switcher__row">
+        <select class="profile-switcher__select" id="js-profile-select"></select>
+        <button class="btn btn--ghost btn--sm" id="js-profile-new" title="Create profile">+</button>
+        <button class="btn btn--ghost btn--sm btn--danger-text" id="js-profile-delete" title="Delete profile">🗑</button>
+      </div>
+    </div>
+
+    <div class="section-label">Memory Profile</div>
+
+    <div id="js-profile-form" class="form">
+      <div class="field">
+        <label class="field__label" for="f-name">Name <span class="field__counter" data-for="f-name">0/80</span></label>
+        <input class="field__input" id="f-name" type="text" placeholder="e.g. Ratul" maxlength="80">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-role">Role <span class="field__counter" data-for="f-role">0/120</span></label>
+        <input class="field__input" id="f-role" type="text" placeholder="e.g. Full-stack Developer" maxlength="120">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-goals">Goals <span class="field__counter" data-for="f-goals">0/200</span></label>
+        <input class="field__input" id="f-goals" type="text" placeholder="e.g. Build production-ready apps" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-skills">Skills <span class="field__counter" data-for="f-skills">0/200</span></label>
+        <input class="field__input" id="f-skills" type="text" placeholder="e.g. Python, React, Node.js" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-preferences">Preferences <span class="field__counter" data-for="f-preferences">0/200</span></label>
+        <input class="field__input" id="f-preferences" type="text" placeholder="e.g. Short answers, code examples" maxlength="200">
+      </div>
+      <div class="field">
+        <label class="field__label" for="f-notes">Notes <span class="field__counter" data-for="f-notes">0/500</span></label>
+        <textarea class="field__input field__textarea" id="f-notes" placeholder="Extra context…" maxlength="500" rows="2"></textarea>
+      </div>
+
+      <div class="token-bar" id="js-token-bar">
+        <div class="token-bar__info"><span class="token-bar__label">Memory size</span><span class="token-bar__value" id="js-token-value">—</span></div>
+        <div class="token-bar__track"><div class="token-bar__fill" id="js-token-fill"></div></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="js-save-profile" class="btn btn--primary">Save Profile</button>
+        <span class="form-actions__saved" id="js-save-msg"></span>
+      </div>
+    </div>
+
+    <div class="preview-section">
+      <div class="preview-header">
+        <div class="section-label" style="margin-bottom:0">Injection Preview</div>
+        <button class="btn btn--ghost btn--sm" id="js-preview-toggle">Show</button>
+      </div>
+      <pre class="preview-box" id="js-preview-box" style="display:none"></pre>
+    </div>
+  </section>
+
+  <!-- ═══ SAVED TAB ═══ -->
+  <section id="tab-saved" class="tab-panel">
+    <div class="saved-header">
+      <div class="section-label" style="margin-bottom:0">Saved Context <span class="item-count" id="js-item-count"></span></div>
+      <div class="saved-header__actions">
+        <button class="btn btn--ghost btn--sm" id="js-add-item-btn">+ Add</button>
+        <button class="btn btn--ghost btn--sm btn--danger-text" id="js-bulk-delete" style="display:none">Delete Selected</button>
+      </div>
+    </div>
+
+    <!-- Decay banner -->
+    <div class="decay-banner" id="js-decay-banner" style="display:none">
+      <span>💤 Some memories are unused. <button class="btn-link" id="js-decay-review">Review</button></span>
+    </div>
+
+    <div class="search-bar">
+      <svg class="search-bar__icon" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <input class="search-bar__input" id="js-search-input" type="text" placeholder="Search notes…">
+    </div>
+
+    <div class="tag-filters" id="js-tag-filters" style="display:none">
+      <button class="tag-chip tag-chip--active" data-tag="all">All</button>
+    </div>
+
+    <div class="add-item-form" id="js-add-item-form" style="display:none">
+      <textarea class="field__input field__textarea" id="js-add-item-text" placeholder="Enter a context note…" rows="2" maxlength="400"></textarea>
+      <div class="add-item-form__row">
+        <div class="add-item-form__tags">
+          <input class="tag-input" id="js-add-item-tag" type="text" placeholder="Tag" maxlength="20">
+          <select class="priority-select" id="js-add-item-priority">
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="add-item-form__actions">
+          <button class="btn btn--primary btn--sm" id="js-add-item-save">Save</button>
+          <button class="btn btn--ghost btn--sm" id="js-add-item-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <ul class="item-list" id="js-item-list"></ul>
+    <div class="empty-state" id="js-empty-state" style="display:none">
+      <div class="empty-state__icon">📝</div>
+      <div class="empty-state__text">No saved notes yet.<br>Select text on any AI page or add one above.</div>
+    </div>
+    <div class="list-footer" id="js-list-footer" style="display:none">
+      <button class="btn btn--danger-ghost btn--sm" id="js-clear-all">Clear all</button>
+    </div>
+  </section>
+
+  <!-- ═══ ROLES TAB ═══ -->
+  <section id="tab-roles" class="tab-panel">
+    <div class="section-label">Role-Based Engine</div>
+    <p class="section-desc">Active role instructions are injected seamlessly.</p>
+
+    <div class="mode-active">
+      <span>Active Role:</span>
+      <select id="js-active-role" class="qc-select">
+        <option value="">None (Default)</option>
+      </select>
+    </div>
+
+    <div id="js-role-list" class="mode-list"></div>
+
+    <div class="divider"></div>
+    <div class="section-label">Create Custom Role</div>
+    <div class="mode-form" id="js-role-form">
+      <input class="field__input" id="js-role-name" type="text" placeholder="Role name (e.g. Architect)" maxlength="30">
+      <textarea class="field__input field__textarea" id="js-role-instruction" placeholder="Instruction text…" rows="3" maxlength="500"></textarea>
+      <button class="btn btn--primary btn--sm" id="js-role-save">Create Role</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Custom Commands</div>
+    <p class="section-desc">Create slash commands that trigger predefined actions.</p>
+    <div id="js-cmd-list" class="cmd-list"></div>
+
+    <div class="cmd-form" id="js-cmd-form">
+      <div class="cmd-form__row">
+        <input class="field__input" id="js-cmd-name" type="text" placeholder="/command" maxlength="20">
+        <input class="field__input" id="js-cmd-desc" type="text" placeholder="Description" maxlength="60">
+      </div>
+      <div class="cmd-form__actions-row">
+        <label><input type="checkbox" id="js-cmd-disable-mem"> Disable memory</label>
+        <label><input type="checkbox" id="js-cmd-skip-sys"> Skip system prompt</label>
+      </div>
+      <div class="cmd-form__row">
+        <select class="qc-select" id="js-cmd-role">
+          <option value="">No role change</option>
+          <option value="researcher">Researcher</option>
+          <option value="developer">Developer</option>
+          <option value="designer">Designer</option>
+          <option value="business">Business</option>
+          <option value="writer">Writer</option>
+        </select>
+        <input class="field__input" id="js-cmd-instruction" type="text" placeholder="Custom instruction (optional)" maxlength="200">
+      </div>
+      <button class="btn btn--primary btn--sm" id="js-cmd-save">Add Command</button>
+    </div>
+  </section>
+
+  <!-- ═══ SETTINGS TAB ═══ -->
+  <section id="tab-settings" class="tab-panel">
+    <div class="section-label">Injection</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Auto-inject memory</span><span class="toggle-row__desc">Prepend context to every message</span></div>
+      <label class="toggle"><input type="checkbox" id="s-inject" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Token-saving prompt</span><span class="toggle-row__desc">Short answers by default</span></div>
+      <label class="toggle"><input type="checkbox" id="s-token-saving" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Role Settings</div>
+    <div class="inline-setting">
+      <label>Injection Position:</label>
+      <select id="s-inj-pos" class="qc-select">
+        <option value="TOP">Top</option>
+        <option value="BOTTOM">Bottom</option>
+      </select>
+    </div>
+    <div class="inline-setting">
+      <label>Role Mode:</label>
+      <select id="s-role-mode" class="qc-select">
+        <option value="AUTO">Auto (Default Role)</option>
+        <option value="MANUAL">Manual (Per Message)</option>
+        <option value="OFF">Off</option>
+      </select>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Preview before sending</span><span class="toggle-row__desc">Inject but wait for manual send</span></div>
+      <label class="toggle"><input type="checkbox" id="s-preview-send" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Persistent Role</span><span class="toggle-row__desc">If off, role resets after one message</span></div>
+      <label class="toggle"><input type="checkbox" id="s-persist-role" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Enable STYLE Block</span><span class="toggle-row__desc">Append formatting instructions</span></div>
+      <label class="toggle"><input type="checkbox" id="s-style-toggle" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <p class="section-desc" style="margin-top:8px">Default STYLE Block Instructions:</p>
+    <textarea class="field__input field__textarea" id="s-style-instr" rows="4"></textarea>
+
+    <div class="divider"></div>
+    <div class="section-label">Template</div>
+    <p class="section-desc">Customize the injection format. Use placeholders: {user_name}, {user_role}, {user_goals}, {memories}, {instruction}</p>
+    <textarea class="field__input field__textarea template-editor" id="js-template-format" rows="8"></textarea>
+    <div class="section-toggles">
+      <label><input type="checkbox" id="tpl-name" checked> Name</label>
+      <label><input type="checkbox" id="tpl-role" checked> Role</label>
+      <label><input type="checkbox" id="tpl-goals" checked> Goals</label>
+      <label><input type="checkbox" id="tpl-memory" checked> Memory</label>
+      <label><input type="checkbox" id="tpl-instruction" checked> Instruction</label>
+    </div>
+    <button class="btn btn--primary btn--sm" id="js-template-save" style="margin-top:8px">Save Template</button>
+
+    <div class="divider"></div>
+    <div class="section-label">Response Control</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Response instruction</span><span class="toggle-row__desc">Append answer rules to every injection</span></div>
+      <label class="toggle"><input type="checkbox" id="s-response-ctrl" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <textarea class="field__input field__textarea" id="js-response-text" rows="3" maxlength="300"></textarea>
+
+    <div class="divider"></div>
+    <div class="section-label">Smart Features</div>
+    <div class="toggle-row"><div class="toggle-row__info"><span class="toggle-row__name">Save text selection</span></div><label class="toggle"><input type="checkbox" id="s-selection" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+    <div class="toggle-row"><div class="toggle-row__info"><span class="toggle-row__name">Auto-detect &amp; suggest</span></div><label class="toggle"><input type="checkbox" id="s-autodetect" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+    <div class="toggle-row"><div class="toggle-row__info"><span class="toggle-row__name">Sensitive data detection</span></div><label class="toggle"><input type="checkbox" id="s-security" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+    <div class="toggle-row"><div class="toggle-row__info"><span class="toggle-row__name">Floating panel</span></div><label class="toggle"><input type="checkbox" id="s-panel" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+
+    <div class="divider"></div>
+    <div class="section-label">Memory Decay</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Suggest unused memory removal</span></div>
+      <label class="toggle"><input type="checkbox" id="s-decay" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div class="inline-setting">
+      <label>Days before suggestion:</label>
+      <input type="number" id="s-decay-days" class="field__input field__input--sm" value="7" min="1" max="90">
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Profile Auto-Switch</div>
+    <div class="toggle-row">
+      <div class="toggle-row__info"><span class="toggle-row__name">Auto-switch per site</span><span class="toggle-row__desc">Use different profiles on different AI platforms</span></div>
+      <label class="toggle"><input type="checkbox" id="s-autoswitch" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label>
+    </div>
+    <div id="js-autoswitch-mappings" class="autoswitch-mappings"></div>
+    <div class="autoswitch-add">
+      <input class="field__input field__input--sm" id="js-as-domain" placeholder="e.g. claude.ai">
+      <select class="qc-select" id="js-as-profile"></select>
+      <button class="btn btn--primary btn--sm" id="js-as-add">Add</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Platforms</div>
+    <div class="platform-toggles">
+      <div class="toggle-row toggle-row--compact"><div class="toggle-row__info"><span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-chatgpt"></span>ChatGPT</span></div><label class="toggle"><input type="checkbox" id="p-chatgpt" class="toggle__input platform-toggle" data-platform="chatgpt"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+      <div class="toggle-row toggle-row--compact"><div class="toggle-row__info"><span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-claude"></span>Claude</span></div><label class="toggle"><input type="checkbox" id="p-claude" class="toggle__input platform-toggle" data-platform="claude"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+      <div class="toggle-row toggle-row--compact"><div class="toggle-row__info"><span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-gemini"></span>Gemini</span></div><label class="toggle"><input type="checkbox" id="p-gemini" class="toggle__input platform-toggle" data-platform="gemini"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+      <div class="toggle-row toggle-row--compact"><div class="toggle-row__info"><span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-perplexity"></span>Perplexity</span></div><label class="toggle"><input type="checkbox" id="p-perplexity" class="toggle__input platform-toggle" data-platform="perplexity"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+      <div class="toggle-row toggle-row--compact"><div class="toggle-row__info"><span class="toggle-row__name"><span class="platform-dot platform-dot--on" id="dot-deepseek"></span>DeepSeek</span></div><label class="toggle"><input type="checkbox" id="p-deepseek" class="toggle__input platform-toggle" data-platform="deepseek"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Advanced</div>
+    <div class="inline-setting"><label>Injection delay (ms):</label><input type="number" id="s-inj-delay" class="field__input field__input--sm" value="0" min="0" max="2000"></div>
+    <div class="inline-setting"><label>Max memories per injection:</label><input type="number" id="s-max-mem" class="field__input field__input--sm" value="8" min="1" max="20"></div>
+    <div class="toggle-row"><div class="toggle-row__info"><span class="toggle-row__name">Debug mode</span><span class="toggle-row__desc">Log injection details to console</span></div><label class="toggle"><input type="checkbox" id="s-debug" class="toggle__input"><span class="toggle__track"><span class="toggle__thumb"></span></span></label></div>
+
+    <div class="divider"></div>
+    <div class="section-label">Data</div>
+    <div class="data-actions">
+      <button class="btn btn--outline btn--full" id="js-export">Export (JSON)</button>
+      <button class="btn btn--outline btn--full" id="js-import">Import (JSON)</button>
+      <input type="file" id="js-import-file" accept=".json" style="display:none">
+    </div>
+  </section>
+
+  <!-- ═══ HELP TAB ═══ -->
+  <section id="tab-help" class="tab-panel">
+    <div class="help-section">
+      <div class="section-label">Getting Started</div>
+      <div class="help-steps">
+        <div class="help-step"><span class="help-step__num">1</span><div class="help-step__content"><strong>Fill your profile</strong><span>Add your name, role, skills on the Profile tab.</span></div></div>
+        <div class="help-step"><span class="help-step__num">2</span><div class="help-step__content"><strong>Visit any AI platform</strong><span>ChatGPT, Claude, Gemini, Perplexity, or DeepSeek.</span></div></div>
+        <div class="help-step"><span class="help-step__num">3</span><div class="help-step__content"><strong>Context auto-syncs</strong><span>Your profile and notes silently prepend to every message.</span></div></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="help-section">
+      <div class="section-label">Slash Commands</div>
+      <div class="cmd-reference__list" id="js-help-commands"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="help-section">
+      <div class="section-label">Tips</div>
+      <div class="help-tips">
+        <div class="help-tip"><span>—</span><span><strong>Pin important notes</strong> — always included in injection.</span></div>
+        <div class="help-tip"><span>—</span><span><strong>Smart matching</strong> — keywords auto-match to your question.</span></div>
+        <div class="help-tip"><span>—</span><span><strong>100% private</strong> — all data stays on your device.</span></div>
+        <div class="help-tip"><span>—</span><span><strong>Floating panel</strong> — toggle memory & modes right on AI pages.</span></div>
+      </div>
+    </div>
+    <div class="help-footer">
+      <span>PromptSync v3.0.0 PRO</span>
+      <span>Privacy-first · All data stored locally</span>
+    </div>
+  </section>
+
+  <div class="popup-toast" id="js-popup-toast"></div>
+
+  <script src="../storage/storage.js"></script>
+  <script src="../utils/tokenizer.js"></script>
+  <script src="../utils/commandParser.js"></script>
+  <script src="../utils/contextEngine.js"></script>
+  <script src="../utils/securityGuard.js"></script>
+  <script src="popup.js"></script>
+
+</body>
+</html>
