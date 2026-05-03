@@ -15,7 +15,7 @@
 
 **Works on:** ChatGPT · Claude · Gemini · Perplexity · DeepSeek
 
-**Runs on:** Chrome · Firefox · Edge · Brave · Opera · Firefox for Android
+**Runs on:** Chrome · Firefox · Edge · Brave · Opera · Firefox for Android · Zen Browser · Vivaldi
 
 </div>
 
