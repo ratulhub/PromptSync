@@ -1,9 +1,15 @@
 /**
- * background.js — Service Worker (v3.0 PRO)
+ * background.js — Service Worker (v3.1.1 PRO)
  * Handles context menus, keyboard shortcuts, memory decay alarms, and cross-tab messaging.
  */
 
 const MAX_ITEMS = 100;
+
+try {
+  if (typeof importScripts === 'function' && typeof api === 'undefined') {
+    importScripts('../utils/browserApi.js');
+  }
+} catch (e) {}
 
 const AI_PLATFORM_PATTERNS = [
   'https://chat.openai.com', 'https://chatgpt.com',
@@ -23,10 +29,10 @@ function isAIPlatformTab(tab) {
 }
 
 /* ── Install / Update ── */
-chrome.runtime.onInstalled.addListener((details) => {
+api.runtime.onInstalled.addListener((details) => {
   // Context menu
-  chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
+  api.contextMenus.removeAll(() => {
+    api.contextMenus.create({
       id: 'asm-save-selection',
       title: 'Save to PromptSync',
       contexts: ['selection']
@@ -35,9 +41,9 @@ chrome.runtime.onInstalled.addListener((details) => {
 
   // Default settings on first install
   if (details.reason === 'install') {
-    chrome.storage.local.get('asm_settings', (res) => {
+    api.storage.local.get('asm_settings', (res) => {
       if (!res.asm_settings) {
-        chrome.storage.local.set({
+        api.storage.local.set({
           asm_settings: {
             injectEnabled: true,
             compactMode: false,
@@ -68,9 +74,9 @@ chrome.runtime.onInstalled.addListener((details) => {
     });
 
     // Default profiles
-    chrome.storage.local.get('asm_profiles', (res) => {
+    api.storage.local.get('asm_profiles', (res) => {
       if (!res.asm_profiles) {
-        chrome.storage.local.set({
+        api.storage.local.set({
           asm_profiles: {
             default: { name: '', role: '', goals: '', skills: '', preferences: '', customNotes: '' },
             student: { name: '', role: 'Student', goals: 'Learn and understand concepts', skills: '', preferences: 'Simple explanations, examples', customNotes: '' },
@@ -81,9 +87,9 @@ chrome.runtime.onInstalled.addListener((details) => {
     });
 
     // Default modes
-    chrome.storage.local.get('asm_task_modes', (res) => {
+    api.storage.local.get('asm_task_modes', (res) => {
       if (!res.asm_task_modes) {
-        chrome.storage.local.set({
+        api.storage.local.set({
           asm_task_modes: {
             coding: { name: 'Coding', instruction: 'You are a coding assistant. Give clean, minimal, working code. No explanation unless asked.', builtin: true },
             study: { name: 'Study', instruction: 'Explain simply step by step. Use easy words. Give examples.', builtin: true },
@@ -96,14 +102,14 @@ chrome.runtime.onInstalled.addListener((details) => {
 
   // Re-inject content scripts to existing AI tabs
   if (details.reason === 'update' || details.reason === 'install') {
-    chrome.tabs.query({}, (tabs) => {
+    api.tabs.query({}, (tabs) => {
       for (const tab of tabs) {
         if (isAIPlatformTab(tab)) {
-          chrome.scripting.executeScript({
+          api.scripting.executeScript({
             target: { tabId: tab.id },
             files: CONTENT_SCRIPTS
           }).catch(() => {});
-          chrome.scripting.insertCSS({
+          api.scripting.insertCSS({
             target: { tabId: tab.id },
             files: ['content/content.css']
           }).catch(() => {});
@@ -113,23 +119,23 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 
   // Set up decay check alarm
-  chrome.alarms.create('asm-decay-check', { periodInMinutes: 1440 }); // Daily
+  api.alarms.create('asm-decay-check', { periodInMinutes: 1440 }); // Daily
 });
 
 /* ── Decay alarm ── */
-chrome.alarms.onAlarm.addListener((alarm) => {
+api.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name !== 'asm-decay-check') return;
   // Just log — actual decay UI is handled in popup
   console.log('[ASM] Decay check alarm fired');
 });
 
 /* ── Context Menu Click ── */
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+api.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId !== 'asm-save-selection' || !info.selectionText) return;
   const text = info.selectionText.trim();
   if (!text) return;
 
-  chrome.storage.local.get('asm_items', (res) => {
+  api.storage.local.get('asm_items', (res) => {
     const items = res.asm_items || [];
     if (items.some(i => i.text && i.text.toLowerCase() === text.toLowerCase())) {
       sendToTab(tab, 'Already saved ✓', 'info');
@@ -141,7 +147,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       tags: [], keywords: [], priority: 'medium', pinned: false, enabled: true
     };
     items.unshift(newItem);
-    chrome.storage.local.set({ asm_items: items.slice(0, MAX_ITEMS) }, () => {
+    api.storage.local.set({ asm_items: items.slice(0, MAX_ITEMS) }, () => {
       sendToTab(tab, 'Saved to Memory ✓', 'success');
     });
   });
@@ -150,23 +156,23 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 /* ── Toast helper ── */
 function sendToTab(tab, message, toastType = 'success') {
   if (!tab?.id) return;
-  chrome.tabs.sendMessage(tab.id, { type: 'SHOW_TOAST', message, toastType }).catch(() => {
-    chrome.scripting.executeScript({ target: { tabId: tab.id }, files: CONTENT_SCRIPTS }).catch(() => {});
+  api.tabs.sendMessage(tab.id, { type: 'SHOW_TOAST', message, toastType }).catch(() => {
+    api.scripting.executeScript({ target: { tabId: tab.id }, files: CONTENT_SCRIPTS }).catch(() => {});
   });
 }
 
 /* ── Keyboard shortcut ── */
-if (chrome.commands?.onCommand) {
-  chrome.commands.onCommand.addListener((command) => {
+if (api.commands?.onCommand) {
+  api.commands.onCommand.addListener((command) => {
     if (command === 'toggle-injection') {
-      chrome.storage.local.get('asm_settings', (res) => {
+      api.storage.local.get('asm_settings', (res) => {
         const settings = res.asm_settings || {};
         settings.injectEnabled = !settings.injectEnabled;
-        chrome.storage.local.set({ asm_settings: settings }, () => {
-          chrome.tabs.query({}, (tabs) => {
+        api.storage.local.set({ asm_settings: settings }, () => {
+          api.tabs.query({}, (tabs) => {
             for (const tab of tabs) {
               if (isAIPlatformTab(tab)) {
-                chrome.tabs.sendMessage(tab.id, {
+                api.tabs.sendMessage(tab.id, {
                   type: 'SHOW_TOAST',
                   message: settings.injectEnabled ? 'Memory ON' : 'Memory OFF',
                   toastType: 'info'
@@ -181,7 +187,7 @@ if (chrome.commands?.onCommand) {
 }
 
 /* ── Message relay ── */
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'ASM_PING') { sendResponse({ status: 'ok' }); return true; }
   return false;
 });
