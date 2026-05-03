@@ -12,6 +12,8 @@
   if (window.__asm_content_loaded) return;
   window.__asm_content_loaded = true;
 
+  const api = typeof browser !== "undefined" ? browser : chrome;
+
   /* ═══════════════════════
      PLATFORM DETECTION
   ═══════════════════════ */
