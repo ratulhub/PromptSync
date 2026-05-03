@@ -70,7 +70,7 @@ Instantly switch contexts or manage memory directly from the AI chat input using
 *   **Auto-Detect:** If you type phrases like *"I am learning..."* or *"My goal is..."* in the chat, PromptSync will recognize this as valuable context and prompt you to save it permanently.
 
 ## 14. 100% Local & Privacy-First
-*   All data, profiles, and settings are stored locally in your browser using `chrome.storage.local`.
+*   All data, profiles, and settings are stored locally in your browser using `api.storage.local` (wrapping `chrome.storage.local` and `browser.storage.local`).
 *   Zero external API calls. Zero analytics. Zero telemetry.
 *   Your personal data and chat context never leaves your machine.
 
@@ -86,3 +86,7 @@ Instantly switch contexts or manage memory directly from the AI chat input using
 ## 17. Premium Dark Mode & UI
 *   A professional, clean popup dashboard built with Glassmorphism elements.
 *   Supports Light mode, Dark mode, and System-synced themes with smooth CSS variable transitions.
+
+## 18. Cross-Browser Compatibility (Chrome & Firefox)
+*   **Universal API Wrapper:** A custom `browserApi.js` layer ensures all storage, messaging, and runtime APIs execute flawlessly on both Chromium-based browsers (Chrome, Edge, Brave) and Firefox.
+*   **Manifest Split System:** Dedicated build pipelines generate `manifest.chrome.json` (Service Worker architecture) and `manifest.firefox.json` (Background Scripts architecture) automatically, avoiding legacy compatibility issues.
