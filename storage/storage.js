@@ -1,7 +1,7 @@
 /**
- * storage.js — v3.0 PRO
+ * storage.js — v3.1.1 PRO
  * Central data layer with profiles, task modes, templates, and advanced settings.
- * All data in chrome.storage.local — never leaves the device.
+ * All data in api.storage.local — never leaves the device.
  */
 
 const MemoryStorage = (() => {
@@ -125,9 +125,9 @@ const MemoryStorage = (() => {
   function storageGet(key) {
     return new Promise(resolve => {
       try {
-        chrome.storage.local.get(key, r => {
-          if (chrome.runtime.lastError) {
-            console.warn('[ASM] Storage get error:', chrome.runtime.lastError.message);
+        api.storage.local.get(key, r => {
+          if (api.runtime.lastError) {
+            console.warn('[ASM] Storage get error:', api.runtime.lastError.message);
             resolve(undefined);
           } else {
             resolve(r[key]);
@@ -143,9 +143,9 @@ const MemoryStorage = (() => {
   function storageSet(obj) {
     return new Promise(resolve => {
       try {
-        chrome.storage.local.set(obj, () => {
-          if (chrome.runtime.lastError) {
-            console.warn('[ASM] Storage set error:', chrome.runtime.lastError.message);
+        api.storage.local.set(obj, () => {
+          if (api.runtime.lastError) {
+            console.warn('[ASM] Storage set error:', api.runtime.lastError.message);
           }
           resolve();
         });
