@@ -5,6 +5,7 @@
  */
 
 const MemoryStorage = (() => {
+  const api = typeof browser !== "undefined" ? browser : chrome;
   'use strict';
 
   const KEYS = {
