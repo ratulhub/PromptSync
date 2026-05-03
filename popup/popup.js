@@ -3,6 +3,7 @@
  * Drives all popup UI: profiles, modes, template, commands, settings, decay.
  */
 function $(sel, ctx = document) { return ctx.querySelector(sel); }
+const api = typeof browser !== "undefined" ? browser : chrome;
 function $$(sel, ctx = document) { return [...ctx.querySelectorAll(sel)]; }
 
 let popupToastTimeout = null;
