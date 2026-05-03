@@ -1,0 +1,97 @@
+{
+  "manifest_version": 3,
+  "name": "PromptSync PRO",
+  "version": "3.1.1",
+  "description": "Your context, synced with AI. PromptSync automatically injects your goals, preferences, and memory into AI chats — less typing, smarter AI, better results. Works on ChatGPT, Claude, Gemini, Perplexity, and DeepSeek.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://www.perplexity.ai/*",
+    "https://chat.deepseek.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "commands": {
+    "toggle-injection": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Toggle memory injection on/off"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://www.perplexity.ai/*",
+        "https://chat.deepseek.com/*"
+      ],
+      "js": [
+        "utils/browserApi.js",
+        "vendor/o200k_base.js",
+        "storage/storage.js",
+        "utils/tokenizer.js",
+        "utils/securityGuard.js",
+        "utils/commandParser.js",
+        "utils/contextEngine.js",
+        "content/floatingPanel.js",
+        "content/content.js"
+      ],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://claude.ai/*"
+      ],
+      "css": [
+        "claude-counter/styles.css"
+      ],
+      "js": [
+        "claude-counter/content/constants.js",
+        "claude-counter/content/bridge-client.js",
+        "claude-counter/vendor/o200k_base.js",
+        "claude-counter/content/tokens.js",
+        "claude-counter/content/ui.js",
+        "claude-counter/content/main.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "claude-counter/injected/bridge.js"
+      ],
+      "matches": [
+        "https://claude.ai/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
