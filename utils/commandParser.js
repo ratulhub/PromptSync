@@ -1,5 +1,5 @@
 /**
- * commandParser.js — v3.0 PRO
+ * commandParser.js — v3.1.1 PRO
  * Parses slash commands from user input.
  * Supports built-in commands + user-defined custom commands.
  *

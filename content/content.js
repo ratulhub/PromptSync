@@ -1,5 +1,5 @@
 /**
- * content.js — v3.0 PRO
+ * content.js — v3.1.1 PRO
  * Core content script for PromptSync.
  * Runs on ChatGPT, Claude, Gemini, Perplexity, DeepSeek.
  *
@@ -83,6 +83,18 @@
   let lastDetectedText = '';
   const MAX_INIT_RETRIES = 30;
   let debugMode = false;
+
+  let isInjectionEnabledSync = true;
+  api.storage.local.get('asm_settings', (res) => {
+    if (res.asm_settings && res.asm_settings.injectEnabled !== undefined) {
+      isInjectionEnabledSync = res.asm_settings.injectEnabled;
+    }
+  });
+  api.storage.onChanged.addListener((changes) => {
+    if (changes.asm_settings && changes.asm_settings.newValue) {
+      isInjectionEnabledSync = changes.asm_settings.newValue.injectEnabled;
+    }
+  });
 
   /* ═══════════════════════
      ELEMENT FINDERS
@@ -336,6 +348,7 @@
   ═══════════════════════ */
   function handleSendClick(e) {
     if (isReDispatchingClick) return;
+    if (!isInjectionEnabledSync) return; // Do not block if disabled
     const sendBtn = getSendBtn();
     if (!sendBtn) return;
     if (!sendBtn.contains(e.target) && e.target !== sendBtn) return;
@@ -373,6 +386,7 @@
   function handleKeydown(e) {
     if (e.key !== 'Enter' || e.shiftKey) return;
     if (isReDispatchingEnter) return;
+    if (!isInjectionEnabledSync) return; // Do not block if disabled
     const input = getInput();
     if (!input || (!input.contains(e.target) && e.target !== input)) return;
     if (alreadyInjectedThisSend) return;
@@ -652,15 +666,23 @@
   /* ═══════════════════════
      INPUT OBSERVER
   ═══════════════════════ */
+  let inputObserverDebounce = null;
   const inputObserver = new MutationObserver(() => {
-    const input = getInput();
-    if (!input) return;
-    const text = getInputText(input).trim();
-    if (!text) return;
-    clearTimeout(detectDebounce);
-    detectDebounce = setTimeout(() => runAutoDetect(text), 1500);
-    clearTimeout(tokenCalcDebounce);
-    tokenCalcDebounce = setTimeout(calculateTokensForInput, 300);
+    clearTimeout(inputObserverDebounce);
+    inputObserverDebounce = setTimeout(() => {
+      const input = getInput();
+      if (!input) {
+        inputObserver.disconnect();
+        inputObserverTarget = null;
+        return;
+      }
+      const text = getInputText(input).trim();
+      if (!text) return;
+      clearTimeout(detectDebounce);
+      detectDebounce = setTimeout(() => runAutoDetect(text), 1500);
+      clearTimeout(tokenCalcDebounce);
+      tokenCalcDebounce = setTimeout(calculateTokensForInput, 300);
+    }, 150);
   });
 
   let boundInputListener = null;
@@ -753,7 +775,7 @@
   /* ═══════════════════════
      MESSAGE LISTENER
   ═══════════════════════ */
-  chrome.runtime.onMessage.addListener((msg) => {
+  api.runtime.onMessage.addListener((msg) => {
     if (msg.type === 'SHOW_TOAST' && msg.message) showToast(msg.message, msg.toastType || 'success');
   });
 
@@ -784,7 +806,7 @@
       startGlobalObserver();
       initFloatingPanel();
       checkAutoSwitch();
-      console.log(`[PromptSync] v3.0 PRO ready on ${PLATFORM}`);
+      console.log(`[PromptSync] v3.1.1 PRO ready on ${PLATFORM}`);
       return true;
     }
     return false;

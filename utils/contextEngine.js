@@ -1,5 +1,5 @@
 /**
- * contextEngine.js — v3.0 PRO
+ * contextEngine.js — v3.1.1 PRO
  * Smart context selection with customizable templates, task modes,
  * response control, and keyword-based memory matching.
  */

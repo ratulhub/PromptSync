@@ -1,5 +1,5 @@
 /**
- * securityGuard.js — v3.0 PRO
+ * securityGuard.js — v3.1.1 PRO
  * Detects sensitive data (API keys, passwords, credit cards) to prevent
  * accidental storage. Used in content.js and popup.js.
  *

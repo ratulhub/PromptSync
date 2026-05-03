@@ -1,5 +1,5 @@
 /**
- * popup.js — v3.0 PRO
+ * popup.js — v3.1.1 PRO
  * Drives all popup UI: profiles, modes, template, commands, settings, decay.
  */
 function $(sel, ctx = document) { return ctx.querySelector(sel); }

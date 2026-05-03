@@ -1,265 +1,182 @@
-<div align="center">
+# ⚡ PromptSync PRO
 
-<img src="https://img.shields.io/badge/PromptSync-PRO-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="PromptSync PRO" />
+> **Your context. Synced with AI.**
+> Less typing, smarter AI, better results.
 
-# PromptSync PRO
+PromptSync is a smart AI memory assistant that automatically adds your context to AI chats to save time and improve answers. It remembers your goals, preferences, and important info, then injects them into every message — so you stop repeating yourself and start getting better responses.
 
-**Your context. Synced with AI.**
-
-*Stop repeating yourself. Start getting smarter responses.*
-
-[![Version](https://img.shields.io/badge/version-3.1.0-6366f1?style=flat-square)](https://github.com)
-[![Manifest](https://img.shields.io/badge/Manifest-V3-blue?style=flat-square)](https://developer.chrome.com/docs/extensions/mv3/)
-[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local-22c55e?style=flat-square)](#privacy)
-[![Platforms](https://img.shields.io/badge/Works%20on-5%20AI%20Platforms-f59e0b?style=flat-square)](#platform-support)
-
-Works on → **ChatGPT · Claude · Gemini · Perplexity · DeepSeek**
-
-</div>
+**Privacy-first** — all data stays on your device. Nothing is ever sent to any server.
 
 ---
 
-## The Problem
+## 🎯 What It Does
 
-Every new AI chat starts from zero.
+| Problem | PromptSync Solution |
+|---------|-------------------|
+| Typing "I'm a developer, I use React..." every chat | Your profile auto-injects |
+| AI gives long, unwanted explanations | Token-saving prompt enforces short answers |
+| Forgetting to mention project context | Saved notes match to your question keywords |
+| Different needs on different AI platforms | Per-platform profiles auto-switch |
+| Wasting tokens on repeated context | Smart injection minimizes token usage |
 
-You type *"I'm a CS student, keep answers short, I use Python"* — again and again and again.
+---
 
-## The Fix
+## ✨ Features
 
-PromptSync stores your profile and notes **locally on your device**, then silently injects them into every message you send. The AI sees your full context + your question as one combined prompt — automatically.
+### 🧠 Smart Memory System
+- **Profile injection** — name, role, goals, skills auto-prepend to every message
+- **Multi-profile support** — switch between Student, Developer, or custom profiles
+- **Auto-switch per site** — use different profiles on ChatGPT vs Claude vs Gemini
+- **Saved context notes** — add, pin, tag, prioritize, enable/disable individual notes
+- **Keyword matching** — notes relevant to your question get selected automatically
+- **Priority system** — high/medium/low priority with visual indicators
+- **Memory decay** — suggests removing unused notes after configurable days
+
+### ⌨️ Command System
+- `/no-memory` — skip injection for this message
+- `/strict` — ultra-minimal context (name + pinned only)
+- `/code` — coding mode with clean code output
+- `/short` — force shortest possible answer
+- `/mode study` — switch to study mode with step-by-step explanations
+- `/temp <text>` — add session-only temporary memory
+- **Custom commands** — create your own like `/fast` or `/deep`
+
+### 🎛️ Role-Based Engine
+- **Professional Roles** — Built-in Researcher, Developer, Designer, Business, and Writer roles.
+- **Strict Formatting** — Injects instructions precisely using `[ROLE]` and `[STYLE]` markdown formatting.
+- **Injection Controls** — Toggle between Top/Bottom injection, persistent or one-time modes.
+- **Fail-Safe Detection** — Automatically skips injection if you manually define a role with "act as..." or "you are a...".
+
+### ⏱️ Sandboxed Claude Counter
+- Fully independent token counter that runs exclusively on `claude.ai`.
+- Accurate token counts using the Claude bridge and BPE base.
+
+### 🔍 Preview System
+- Before your message is sent, the system can pause execution.
+- Review and edit the automatically generated prompt directly in the input box before manual submission.
+
+### 📝 Customizable Template
+- Edit the injection format with placeholders: `{user_name}`, `{user_role}`, `{user_goals}`, `{memories}`, `{instruction}`
+- Toggle sections on/off (name, role, goals, memory, instruction)
+- Editable response control instructions
+
+### ⚡ Floating Panel
+- Token badge always visible on AI pages
+- Click to expand: memory toggle, mode switch, token breakdown
+- Draggable and repositionable
+- Session token tracking with context window progress bar
+
+### 🔒 Security Guard
+- Detects API keys (OpenAI, Stripe, AWS, GitHub, GitLab)
+- Catches passwords, credit card numbers, private keys
+- Warns before saving sensitive data
+
+### 🌙 Design
+- Clean, minimal, non-intrusive UI
+- Dark/light/system theme
+- Glassmorphism floating panel
+- Smooth micro-animations
+
+---
+
+## 🌐 Supported Platforms
+
+| Platform | Status |
+|----------|--------|
+| ChatGPT (chat.openai.com / chatgpt.com) | ✅ Full support |
+| Claude (claude.ai) | ✅ Full support |
+| Gemini (gemini.google.com) | ✅ Full support |
+| Perplexity (perplexity.ai) | ✅ Full support |
+| DeepSeek (chat.deepseek.com) | ✅ Full support |
+
+Each platform can be individually enabled/disabled.
+
+---
+
+## 📁 Architecture
 
 ```
-You type  →  "How do I sort a list?"
-AI sees   →  [Your profile + preferences + notes]  +  "How do I sort a list?"
-Result    →  Precise, personalized answer. Zero extra typing.
-```
-
-**All data stays in `chrome.storage.local`. No servers. No telemetry. Nothing leaves your device. Ever.**
-
----
-
-## Installation
-
-### Manual (Developer Mode)
-
-1. Clone or download this repository:
-   ```bash
-   git clone https://github.com/ratulhub/promptsync.git
-   ```
-2. Open Chrome → go to `chrome://extensions/`
-3. Enable **Developer Mode** (toggle in top-right)
-4. Click **Load unpacked** → select the project folder
-5. Pin the PromptSync icon to your Chrome toolbar
-
-> Requires Chrome 88+ (Manifest V3).
-
-<br>
-<div align="center">
-<video src="https://github.com/user-attachments/assets/c29fc815-5872-4ee4-a32b-56cb295e112e" autoplay loop muted playsinline width="90%"></video>
-
-*📦 Installation walkthrough — follow along to get set up in under a minute.*
-</div>
-
----
-
-## Feature Overview
-
-### 🧠 Multi-Profile System
-Store multiple personas (Student, Developer, Designer, Custom) with different names, roles, goals, skills, and preferences. Switch manually or let **auto-switch** handle it — map domains like `claude.ai → Student` and `chatgpt.com → Developer`, and the right profile loads automatically on page visit.
-
----
-
-### ⚡ Smart Context Injection
-Builds a personalized injection from a **customizable template** using placeholders:
-
-```
-{user_name}  {user_role}  {user_goals}  {memories}  {instruction}
-```
-
-You can toggle each section on/off individually. Output is wrapped in `[USER CONTEXT START]...[USER CONTEXT END]` markers so the AI treats it as structured context. A built-in **token-saving default** appends *"Answer as short as possible. No explanation unless asked."* — disabled automatically when a task mode is active.
-
----
-
-### 🔢 Sandboxed Claude Token Counter *(Priority Feature)*
-
-One of the most powerful features in PromptSync PRO — built exclusively for **Claude** (`claude.ai`).
-
-**Why it matters:** Claude has a 200K context window. Without tracking, you can silently approach the limit and get degraded responses without realizing it.
-
-**How it works:**
-- Runs as a **fully independent, sandboxed script** that targets only `claude.ai` — zero interference with the core injection engine
-- Uses the **o200k_base BPE tokenizer** (same algorithm as OpenAI's tiktoken) for highly accurate, fully offline token counting — no API calls required
-- Tracks **input tokens**, **injected memory tokens**, and **total session tokens** in real-time
-- Displays a **visual progress bar** showing exactly what percentage of the 200K window is used, color-coded by usage level
-- All metrics appear in a **draggable glassmorphism floating panel** directly on the Claude interface
-
-> Think of it as a fuel gauge for your Claude conversations — always visible, always accurate.
-
-The floating panel is collapsible: when closed, it shows a compact badge like `120 tok`. Click to expand and see the full breakdown + context window bar.
-
----
-
-### 💬 Command System
-
-Type slash commands in your message to control behavior on the fly:
-
-| Command | Effect |
-|---|---|
-| `/research` | Switch to Researcher role |
-| `/dev` | Switch to Developer role |
-| `/design` | Switch to Designer role |
-| `/code` | Coding assistant mode |
-| `/short` | Force shortest possible answer |
-| `/explain` | Allow full detailed explanation |
-| `/no-memory` | Skip injection for this message |
-| `/only-profile` | Inject profile only, no notes |
-| `/strict` | Ultra-minimal (name + pinned notes only) |
-| `/temp <text>` | Add session-only temporary memory |
-| `/reset` | Revert to defaults |
-
-You can also **create your own commands** (`/fast`, `/deep`, etc.) that trigger predefined actions like mode changes, toggling memory, or appending custom instructions — no arbitrary code execution.
-
----
-
-### 📝 Saved Context Notes
-
-Save notes with tags, priority levels (high / medium / low), and pin status. Notes are **keyword-matched**: when you type a message, PromptSync scores all your notes against your prompt keywords and auto-selects the most relevant ones to inject. Pinned notes are always included.
-
-Features: drag-and-drop reorder, bulk delete, per-note enable/disable toggle, full-text search.
-
----
-
-### 🔐 Security Guard
-
-Scans every input before saving to detect and warn about accidental storage of sensitive data:
-
-- API keys: OpenAI (`sk-`), Stripe (`pk_/sk_`), AWS (`AKIA`), GitHub (`ghp_`)
-- Passwords and secrets (`password:`, `secret:`, `passwd=`)
-- Private keys (`-----BEGIN PRIVATE KEY-----`)
-- Bearer tokens
-- Credit card numbers (13–19 digits, Luhn-validated)
-
-A warning popup appears — you can override or cancel. Nothing sensitive gets saved by accident.
-
----
-
-### 🧹 Memory Decay
-
-Tracks the `lastUsed` timestamp on every note. After a configurable number of days (default: 7), unused notes surface in a **decay banner** with a one-click bulk-remove option. Pinned notes are exempt. Your memory stays clean and relevant automatically.
-
----
-
-### 👁️ Preview System
-
-Optionally intercept the send action. PromptSync injects the full context into the textbox and **pauses** — letting you review and edit the generated prompt before it's actually sent. Full control, zero surprises.
-
----
-
-### 🎨 Themes
-
-Light / Dark / System (auto-detects your OS preference). Glassmorphism effects on the floating panel and toast notifications. Toggle with a single button in the header.
-
----
-
-## Platform Support
-
-| Platform | Input Type | Context Window Tracked |
-|---|---|---|
-| **ChatGPT** | ProseMirror | 128K |
-| **Claude** | ProseMirror | 200K *(+ Sandboxed Counter)* |
-| **Gemini** | ContentEditable | 1M |
-| **Perplexity** | Textarea | 16K |
-| **DeepSeek** | Textarea | 64K |
-
-SPA navigation is handled via URL polling + popstate listener, so injection works even as you navigate between chats without a page reload.
-
----
-
-## Architecture
-
-```
-promptsync-pro/
-├── manifest.json                    → Manifest V3 configuration
-├── build.sh                         → Release build script
-│
+promptsync/
+├── manifest.json          — Manifest V3 configuration
 ├── background/
-│   └── background.js                → Service worker: context menus, shortcuts, decay alarms
-│
-├── storage/
-│   └── storage.js                   → Central data layer (chrome.storage.local)
-│                                      Profiles, notes, modes, commands, settings CRUD
-│
-├── utils/
-│   ├── tokenizer.js                 → Base BPE tokenizer (o200k_base + heuristic fallback)
-│   ├── tokenTracker.js              → Token tracking integration layer
-│   ├── contextEngine.js             → Keyword extraction, relevance scoring, template builder
-│   ├── commandParser.js             → Built-in + custom slash command parser
-│   └── securityGuard.js             → Sensitive data scanner (10 patterns, Luhn CC check)
-│
+│   └── background.js      — Service worker: context menu, shortcuts, alarms
 ├── content/
-│   ├── content.js                   → Core injection pipeline, platform selectors, send interception
-│   ├── floatingPanel.js             → Token badge + draggable control panel
-│   └── content.css                  → All injected UI styles
-│
-├── claude-counter/                  → Sandboxed Claude Token Counter (independent, claude.ai only)
-│   ├── content/
-│   │   ├── main.js                  → Entry point
-│   │   ├── tokens.js                → Token calculation logic
-│   │   ├── ui.js                    → Floating panel UI rendering
-│   │   ├── bridge-client.js         → Communicates with injected bridge
-│   │   └── constants.js             → Claude-specific constants (200K limit, selectors)
-│   ├── injected/
-│   │   └── bridge.js                → Page-context bridge for DOM access
-│   ├── vendor/
-│   │   └── o200k_base.js            → Local copy of BPE tokenizer (sandboxed scope)
-│   └── styles.css                   → Counter UI styles
-│
+│   ├── content.js         — Core injection pipeline
+│   ├── content.css        — All injected UI styles
+│   ├── floatingPanel.js   — Token badge + expandable control panel
+│   └── onboarding.js      — First-run welcome overlay
 ├── popup/
-│   ├── popup.html                   → 5-tab dashboard (Profile, Saved, Modes, Settings, Help)
-│   ├── popup.js                     → All popup logic
-│   └── popup.css                    → CSS variables, light/dark, component styles
-│
+│   ├── popup.html         — 5-tab dashboard UI
+│   ├── popup.js           — All popup logic
+│   └── popup.css          — Popup styles with CSS variables
+├── storage/
+│   └── storage.js         — Central data layer (chrome.storage.local)
+├── utils/
+│   ├── tokenizer.js       — BPE token counting (o200k_base)
+│   ├── contextEngine.js   — Smart context selection + template engine
+│   ├── commandParser.js   — Slash command parser + custom commands
+│   └── securityGuard.js   — Sensitive data detection
 ├── vendor/
-│   └── o200k_base.js                → Offline BPE tokenizer (shared, main extension scope)
-│
+│   └── o200k_base.js      — GPT tokenizer library
 ├── icons/
 │   ├── icon16.png
 │   ├── icon48.png
 │   └── icon128.png
-│
-├── build/                           → Compiled output (.zip / .crx) for production
-├── counter_ref/                     → Original counter reference (Mozilla manifest, src, LICENSE)
-├── README.md
-├── USER_MANUAL.md
-├── FEATURES.md
-└── LICENSE
+└── build.sh               — Release build script
 ```
 
+### Data Flow
+
+```
+User Input → Parse Commands → Build Context (Engine) → Inject → Track Tokens
+                ↓                    ↓
+           Custom Commands    Template + Profile + Notes + Mode
+```
+
+### Storage Keys
+All data in `chrome.storage.local`:
+- `asm_profiles` — multi-profile data
+- `asm_items` — saved context notes with keywords, priority, decay
+- `asm_settings` — all settings including platform toggles, auto-switch, decay
+- `asm_roles` — custom and builtin roles for the Role-Based Engine
+- `asm_custom_commands` — user-defined slash commands
+- `asm_template` — customizable injection template
+- `asm_panel_position` — floating panel coordinates
+
 ---
 
-## Privacy
+## 🚀 Installation
 
-| What | Status |
-|---|---|
-| Data storage | `chrome.storage.local` only |
-| External API calls | ❌ None |
-| Analytics / telemetry | ❌ None |
-| Token counting (API) | ❌ None — fully offline BPE |
-| Data leaving your device | ❌ Never |
-
----
-
-## Open Source Credits
-
-- **[o200k_base Tokenizer](https://github.com/openai/tiktoken)** — BPE tokenizer derived from OpenAI's tiktoken, used for accurate offline token counting in the Claude Sandboxed Counter and the floating panel's real-time token tracker.
+1. Download or clone this repository
+2. Open `chrome://extensions` in Chrome
+3. Enable **Developer mode** (top right)
+4. Click **Load unpacked** → select the project folder
+5. Pin PromptSync to your toolbar
+6. Open any supported AI platform and start chatting
 
 ---
 
-<div align="center">
+## 📜 Version History
 
-**PromptSync PRO v3.1.0**
+| Version | Highlights |
+|---------|-----------|
+| v3.1.1  | Role-Based Engine, strict `[ROLE]` format, Preview System, Fail-Safe detection, Sandboxed Claude Counter |
+| v3.0.0  | Multi-profiles, auto-switch, custom commands, floating panel, template editor, security guard, memory decay |
+| v2.5.0  | Token tracking, command system, context engine, dark mode |
+| v2.0.0  | Smart injection, keyword matching, platform support |
+| v1.0.0  | Basic memory storage and injection |
 
+---
+
+## 🔐 Privacy
+
+- **Zero network requests** — nothing leaves your device
+- **No analytics** — no tracking, no telemetry
+- **Local-only storage** — all data in `chrome.storage.local`
+- **Open source** — inspect every line of code
+- **Security guard** — actively prevents saving sensitive data
+
+---
+
+**PromptSync PRO v3.1.1**
 *Stop repeating. Start syncing.*
-
-</div>

@@ -1,5 +1,5 @@
 /**
- * floatingPanel.js — v3.0 PRO
+ * floatingPanel.js — v3.1.1 PRO
  * Combined token badge + expandable floating panel.
  * Modes: badge-only, full-panel, hidden.
  * Features: memory toggle, mode switch, token details, draggable, collapsible.
