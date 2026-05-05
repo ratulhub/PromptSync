@@ -10,22 +10,22 @@ const ContextEngine = (() => {
   let sessionMemory = [];
 
   const MODE_LIMITS = {
-    strict:  { items: 1, profileFields: ['name'], includeRelevant: false },
+    strict: { items: 1, profileFields: ['name'], includeRelevant: false },
     compact: { items: 3, profileFields: ['name', 'role', 'goals', 'skills'], includeRelevant: true },
-    normal:  { items: 5, profileFields: ['name', 'role', 'goals', 'skills', 'preferences', 'customNotes'], includeRelevant: true },
-    detail:  { items: 8, profileFields: ['name', 'role', 'goals', 'skills', 'preferences', 'customNotes'], includeRelevant: true }
+    normal: { items: 5, profileFields: ['name', 'role', 'goals', 'skills', 'preferences', 'customNotes'], includeRelevant: true },
+    detail: { items: 8, profileFields: ['name', 'role', 'goals', 'skills', 'preferences', 'customNotes'], includeRelevant: true }
   };
 
   const STOP_WORDS = new Set([
-    'the','a','an','is','are','was','were','be','been','being','have','has','had',
-    'do','does','did','will','would','could','should','may','might','can','shall',
-    'to','of','in','for','on','with','at','by','from','as','into','about','like',
-    'through','after','over','between','out','against','during','without','before',
-    'under','around','among','it','its','this','that','these','those','i','me','my',
-    'we','our','you','your','he','she','they','them','his','her','what','which','who',
-    'whom','how','when','where','why','if','then','so','than','too','very','just',
-    'but','and','or','not','no','nor','all','each','every','both','few','more','most',
-    'other','some','such','only','own','same','also','any','much','many'
+    'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+    'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'shall',
+    'to', 'of', 'in', 'for', 'on', 'with', 'at', 'by', 'from', 'as', 'into', 'about', 'like',
+    'through', 'after', 'over', 'between', 'out', 'against', 'during', 'without', 'before',
+    'under', 'around', 'among', 'it', 'its', 'this', 'that', 'these', 'those', 'i', 'me', 'my',
+    'we', 'our', 'you', 'your', 'he', 'she', 'they', 'them', 'his', 'her', 'what', 'which', 'who',
+    'whom', 'how', 'when', 'where', 'why', 'if', 'then', 'so', 'than', 'too', 'very', 'just',
+    'but', 'and', 'or', 'not', 'no', 'nor', 'all', 'each', 'every', 'both', 'few', 'more', 'most',
+    'other', 'some', 'such', 'only', 'own', 'same', 'also', 'any', 'much', 'many'
   ]);
 
   function extractKeywords(text) {
@@ -116,14 +116,14 @@ const ContextEngine = (() => {
     // Update lastUsed on selected items asynchronously
     if (typeof MemoryStorage !== 'undefined') {
       selectedItems.forEach(item => {
-        MemoryStorage.updateLastUsed(item.id).catch(() => {});
+        MemoryStorage.updateLastUsed(item.id).catch(() => { });
       });
     }
 
     // Build profile parts
     const profileParts = {};
-    if (sections.name && profile.name)   profileParts.user_name = profile.name;
-    if (sections.role && profile.role)    profileParts.user_role = profile.role;
+    if (sections.name && profile.name) profileParts.user_name = profile.name;
+    if (sections.role && profile.role) profileParts.user_role = profile.role;
     if (sections.goals) {
       profileParts.user_goals = profile.goals || profile.goal || '';
     }
@@ -238,7 +238,7 @@ const ContextEngine = (() => {
 
     const config = MODE_LIMITS[mode] || MODE_LIMITS.normal;
     const lines = [];
-    const fieldMap = { name:'Name', role:'Role', goals:'Goals', goal:'Goals', skills:'Skills', preferences:'Preferences', customNotes:'Notes' };
+    const fieldMap = { name: 'Name', role: 'Role', goals: 'Goals', goal: 'Goals', skills: 'Skills', preferences: 'Preferences', customNotes: 'Notes' };
 
     for (const field of config.profileFields) {
       const val = profile[field];
