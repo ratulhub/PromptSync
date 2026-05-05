@@ -6,11 +6,19 @@ Welcome to **PromptSync PRO**, your privacy-first AI context manager. This exten
 
 ## 1. Installation
 
+### Chrome, Edge, and Brave
 1. Download or clone the PromptSync repository to your computer.
-2. Open Google Chrome (or Edge/Brave) and go to `chrome://extensions`.
+2. Open your browser and go to `chrome://extensions` (or `edge://extensions`).
 3. Turn on **Developer mode** using the toggle in the top right corner.
 4. Click the **Load unpacked** button and select the PromptSync folder.
 5. **Pin** the extension to your browser toolbar for quick access.
+
+### Firefox and Zen Browser
+1. Download or clone the PromptSync repository to your computer.
+2. Open your browser and go to `about:debugging#/runtime/this-firefox`.
+3. Click the **Load Temporary Add-on...** button.
+4. Select the `manifest.json` file inside the PromptSync folder (or select the `promptsync-firefox-v3.1.1.zip` file if you have built it).
+5. **Note:** If you try to install the `.zip` file from `about:addons` using the "Install Add-on From File" option, Firefox will say **"This add-on could not be installed because it appears to be corrupt."** This is a normal Firefox security feature for extensions that haven't been published and signed by Mozilla. Always use `about:debugging` to install locally.
 
 ---
 
